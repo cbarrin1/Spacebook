@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TabHost xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/tabhost" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <TabWidget
+            android:id="@android:id/tabs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/colorPrimaryDark" />
+
+        <FrameLayout android:id="@android:id/tabcontent"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- first tab -->
+            <LinearLayout android:id="@+id/My_Reservations"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="My Reservations"
+                >
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+
+                    <TextView
+                        android:id="@+id/textView"
+                        android:layout_width="423dp"
+                        android:layout_height="570dp"
+                        android:text="TextView" />
+
+                    <Button
+                        android:id="@+id/button"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cancel Reservations"
+                        android:background="@color/colorPrimaryDark"/>
+
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- second tab -->
+            <LinearLayout android:id="@+id/Make_Reservations"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="Make Reservations"
+                >
+
+                <CalendarView
+                    android:id="@+id/calendarView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" >
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="178dp"
+                        android:layout_height="wrap_content"
+                        android:text="Date Selected" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        android:layout_width="350dp"
+                        android:layout_height="wrap_content"
+                        android:text="TextView" />
+                </TableRow>
+
+            </LinearLayout>
+
+
+
+
+
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <TableRow
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"></LinearLayout>
+    </TableRow>
+</TabHost>
