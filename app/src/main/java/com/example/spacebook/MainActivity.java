@@ -28,27 +28,6 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Spacebook", "Create database failed");
         }
 
-        //query database
-        ArrayList<User> userList = helper.getUserList();
-
-        //write contents of list to screen
-        for (User item : userList) {
-            System.out.println(item);
-
-        }
-
-        //helper.addUser(new User("barring_char@bentley.edu", "password123"));
-
-
-        //query database
-        ArrayList<User> userList1 = helper.getUserList();
-
-        //write contents of list to screen
-        for (User item : userList1) {
-            System.out.println(item);
-
-        }
-
     }
 
     @Override
