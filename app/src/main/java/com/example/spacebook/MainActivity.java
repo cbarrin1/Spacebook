@@ -17,7 +17,7 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
-
+    //DB objects
     private SQLiteDatabase db;
     private SQLHelper helper;
 
@@ -54,22 +54,24 @@ public class MainActivity extends AppCompatActivity {
                 validate(username.getText().toString(), password.getText().toString());
             }
         });
-
+        //SQLite helper instance
         helper = new SQLHelper(this);
 
-        //create database
+        //opens DB
         try {
             db = helper.getWritableDatabase();
         } catch (SQLException e) {
             Log.d("Spacebook", "Create database failed");
         }
 
-        helper.addRes(new Reservation("001", "test@bentley.edu", "2019-04-27", "08:00","09:00"));
+        //helper.addRes(new Reservation("001", "test@bentley.edu", "2019-04-27", "08:00","09:00"));
 
     }
 
     private void validate (String username, String password) {
+        //string to save DB query result
         String pass = "";
+        //look for users in DB with an email that matches input
         try {
             cursor = db.rawQuery("SELECT password FROM USERS WHERE email = ?", new String[]{username});
             while (cursor.moveToNext()) {
@@ -77,9 +79,12 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch(Exception e) { e.printStackTrace();}
 
+        //compares user input password with password in DB
+        //password is stored in plain text, as all accounts are just test accounts
         if ((pass.equals(password))){
-
+            //moves to next activity
             Intent intent = new Intent(MainActivity.this, TabPage.class);
+            //adding extra content to intent to pass username
             intent.putExtra("user", username);
             startActivity(intent);
             Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();

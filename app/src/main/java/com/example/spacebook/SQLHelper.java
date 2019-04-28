@@ -25,6 +25,7 @@ public class SQLHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
+        //creating tables
         db.execSQL(SQLConstants.CREATE_USER_TABLE);
         db.execSQL(SQLConstants.CREATE_ROOM_TABLE);
         db.execSQL(SQLConstants.CREATE_RES_TABLE);
@@ -174,7 +175,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.HAS_LCD, "YES");
         db.insert(SQLConstants.ROOM_TABLE, null, values);
 
-        // test user
+        // test users
         values = new ContentValues();
         values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
         values.put(SQLConstants.USER_PASS, "password123");
@@ -189,6 +190,15 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.USER_EMAIL, "android@bentley.edu");
         values.put(SQLConstants.USER_PASS, "testing");
         db.insert(SQLConstants.USER_TABLE, null, values);
+
+        //test reservations
+        values = new ContentValues();
+        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
+        values.put(SQLConstants.ROOM_NO, "001");
+        values.put(SQLConstants.DATE, "2019-04-01");
+        values.put(SQLConstants.TIME_START, "08:00");
+        values.put(SQLConstants.TIME_END, "09:30");
+        db.insert(SQLConstants.RES_TABLE, null, values);
 
     }
 
@@ -205,6 +215,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    //method for adding user
     public void addUser(User user){
         SQLiteDatabase db = this.getWritableDatabase();
         values = new ContentValues();
@@ -214,6 +225,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         Log.d("SQLiteDemo", user.getUser() + " added");
     }
 
+    //method for adding reservation
     public void addRes(Reservation r){
         SQLiteDatabase db = this.getWritableDatabase();
         values = new ContentValues();
@@ -226,6 +238,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         Log.d("SQLiteDemo", r.getRes_id() + " added");
     }
 
+    //method for getting all users in DB
     public ArrayList<User> getUserList () {
         SQLiteDatabase db = this.getWritableDatabase();
         cursor = db.query(SQLConstants.USER_TABLE,
@@ -244,7 +257,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         return userList;
     }
 
-
+    //method for getting all reservations in DB (for one user email)
     public ArrayList<Reservation> getResList (String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         cursor = db.query(SQLConstants.RES_TABLE,
@@ -265,6 +278,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         return resList;
     }
 
+    //gets list of all rooms in DB
     public ArrayList<Room> getRoomList () {
         SQLiteDatabase db = this.getWritableDatabase();
         cursor = db.query(SQLConstants.ROOM_TABLE,
