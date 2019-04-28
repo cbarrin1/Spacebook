@@ -208,8 +208,8 @@ public class SQLHelper extends SQLiteOpenHelper {
     public void addRes(Reservation r){
         SQLiteDatabase db = this.getWritableDatabase();
         values = new ContentValues();
-        values.put(SQLConstants.ROOM_ID, r.getRoom_id());
-        values.put(SQLConstants.USER_ID, r.getUser_id());
+        values.put(SQLConstants.ROOM_NO, r.getRoom_id());
+        values.put(SQLConstants.USER_EMAIL, r.getUser_email());
         values.put(SQLConstants.DATE, r.getDate());
         values.put(SQLConstants.TIME_START, r.getStart());
         values.put(SQLConstants.TIME_END, r.getEnd());
@@ -235,6 +235,28 @@ public class SQLHelper extends SQLiteOpenHelper {
         }
         db.close();
         return userList;
+    }
+
+
+    public ArrayList<Reservation> getResList () {
+        SQLiteDatabase db = this.getWritableDatabase();
+        cursor = db.query(SQLConstants.RES_TABLE,
+                new String[] {SQLConstants.USER_EMAIL, SQLConstants.ROOM_NO, SQLConstants.DATE, SQLConstants.TIME_START, SQLConstants.TIME_END},
+                null, null, null, null, SQLConstants.DATE);
+
+        //write contents of Cursor to list
+        resList = new ArrayList<>();
+        while (cursor.moveToNext()) {
+            String email = cursor.getString(cursor.getColumnIndex(SQLConstants.USER_EMAIL));
+            String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+            String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+            String s = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+            String e = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
+
+            resList.add(new Reservation(email, room, date, s, e));
+        }
+        db.close();
+        return resList;
     }
 
     public ArrayList<Room> getRoomList () {

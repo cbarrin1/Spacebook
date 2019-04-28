@@ -17,7 +17,7 @@ public class SQLConstants {
     // room table
     public static final String ROOM_TABLE = "rooms";
     public static final String ROOM_ID = "room_id";
-    public static final String ROOM_NO = "roomNum";
+    public static final String ROOM_NO = "roomNo";
     public static final String ROOM_LOCATION = "location";
     public static final String HAS_LCD = "hasLCD";
     public static final String CREATE_ROOM_TABLE = "CREATE TABLE " + ROOM_TABLE + " (" + ROOM_ID + KEY_ID + "," +
@@ -30,6 +30,6 @@ public class SQLConstants {
     public static final String TIME_START = "start";
     public static final String TIME_END = "end";
     public static final String CREATE_RES_TABLE = "CREATE TABLE " + RES_TABLE + " (" + RES_ID + KEY_ID + "," +
-                                                    USER_ID + " text," + ROOM_ID + " text," + DATE + " text," + TIME_START + " text," +
+                                                    USER_EMAIL + " text," + ROOM_NO + " text," + DATE + " text," + TIME_START + " text," +
                                                     TIME_END + " text);";
 }
