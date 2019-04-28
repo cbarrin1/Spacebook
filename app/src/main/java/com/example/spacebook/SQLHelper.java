@@ -180,6 +180,16 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.USER_PASS, "password123");
         db.insert(SQLConstants.USER_TABLE, null, values);
 
+        values = new ContentValues();
+        values.put(SQLConstants.USER_EMAIL, "admin@bentley.edu");
+        values.put(SQLConstants.USER_PASS, "12345");
+        db.insert(SQLConstants.USER_TABLE, null, values);
+
+        values = new ContentValues();
+        values.put(SQLConstants.USER_EMAIL, "android@bentley.edu");
+        values.put(SQLConstants.USER_PASS, "testing");
+        db.insert(SQLConstants.USER_TABLE, null, values);
+
     }
 
     //called when database version mismatch
@@ -202,7 +212,6 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.USER_PASS, user.getPass());
         db.insert(SQLConstants.USER_TABLE, null, values);
         Log.d("SQLiteDemo", user.getUser() + " added");
-        db.close();
     }
 
     public void addRes(Reservation r){
@@ -215,7 +224,6 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.TIME_END, r.getEnd());
         db.insert(SQLConstants.RES_TABLE, null, values);
         Log.d("SQLiteDemo", r.getRes_id() + " added");
-        db.close();
     }
 
     public ArrayList<User> getUserList () {
@@ -233,29 +241,27 @@ public class SQLHelper extends SQLiteOpenHelper {
 
             userList.add(new User(id, u, p));
         }
-        db.close();
         return userList;
     }
 
 
-    public ArrayList<Reservation> getResList () {
+    public ArrayList<Reservation> getResList (String email) {
         SQLiteDatabase db = this.getWritableDatabase();
         cursor = db.query(SQLConstants.RES_TABLE,
                 new String[] {SQLConstants.USER_EMAIL, SQLConstants.ROOM_NO, SQLConstants.DATE, SQLConstants.TIME_START, SQLConstants.TIME_END},
-                null, null, null, null, SQLConstants.DATE);
+                "email = " + email , null, null, null, SQLConstants.DATE);
 
         //write contents of Cursor to list
         resList = new ArrayList<>();
         while (cursor.moveToNext()) {
-            String email = cursor.getString(cursor.getColumnIndex(SQLConstants.USER_EMAIL));
+            String useremail = cursor.getString(cursor.getColumnIndex(SQLConstants.USER_EMAIL));
             String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
             String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
             String s = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
             String e = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-            resList.add(new Reservation(email, room, date, s, e));
+            resList.add(new Reservation(useremail, room, date, s, e));
         }
-        db.close();
         return resList;
     }
 
@@ -274,7 +280,6 @@ public class SQLHelper extends SQLiteOpenHelper {
 
             roomList.add(new Room(room, location, lcd));
         }
-        db.close();
         return roomList;
     }
 

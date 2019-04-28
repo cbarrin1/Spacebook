@@ -51,22 +51,8 @@ public class MainActivity extends AppCompatActivity {
             Log.d("Spacebook", "Create database failed");
         }
 
-        // TEST CODE FOR DB
-       /* cursor = db.rawQuery("SELECT * FROM ROOMS WHERE roomNo ='001'",null);
-        while (cursor.moveToNext()) {
-            String roomno = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
-            String loc = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_LOCATION));
-
-            System.out.println(roomno + " " + loc);
-        }
         helper.addRes(new Reservation("001", "test@bentley.edu", "2019-04-27", "08:00","09:00"));
 
-        ArrayList<Reservation> resList = helper.getResList();
-        for (Reservation item : resList) {
-            System.out.println(item);
-        }
-        //END TEST CODE
-        */
     }
 
     private void validate (String username, String password) {
@@ -81,11 +67,15 @@ public class MainActivity extends AppCompatActivity {
         if ((pass.equals(password))){
             // PLEASE connect THE tab page class to the activity that contains the tabs
             Intent intent = new Intent(MainActivity.this, TabPage.class);
+            intent.putExtra("user", username);
             startActivity(intent);
             Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();
         }
-        else
+        else{
             Toast.makeText(this, "Login FAILED",Toast.LENGTH_SHORT).show();
+        }
+
+
 
     }
 
