@@ -30,7 +30,7 @@ public class Room {
 
     @NonNull
     public String toString(){
-        return "Room No: " + roomNo + " Location: " + location;
+        return "Room ID: " + id + " Room No: " + roomNo + " Location: " + location;
     }
 
 }
