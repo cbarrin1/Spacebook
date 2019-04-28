@@ -15,7 +15,6 @@ public class SQLHelper extends SQLiteOpenHelper {
     private Cursor cursor;
 
     private ArrayList<User> userList;
-    private ArrayList<Time> timeList;
     private ArrayList<Room> roomList;
     private ArrayList<Reservation> resList;
 
@@ -27,317 +26,10 @@ public class SQLHelper extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL(SQLConstants.CREATE_USER_TABLE);
-        db.execSQL(SQLConstants.CREATE_TIME_TABLE);
         db.execSQL(SQLConstants.CREATE_ROOM_TABLE);
         db.execSQL(SQLConstants.CREATE_RES_TABLE);
 
-        // initial time inserts
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "08:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "08:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "08:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "08:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "09:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "09:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "09:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "09:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "10:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "10:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "10:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "10:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "11:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "11:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "11:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "11:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "12:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "12:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "12:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "12:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "13:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "13:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "13:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "13:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "14:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "14:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "14:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "14:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "15:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "15:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "15:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "15:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "16:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "16:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "16:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "16:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "17:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "17:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "17:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "17:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "18:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "18:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "18:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "18:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "19:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "19:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "19:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "19:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "20:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "20:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "20:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "20:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "21:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "21:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "21:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "21:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "22:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "22:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "22:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "22:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "23:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "23:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "23:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "23:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "24:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "0:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "0:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "0:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "1:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "1:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "1:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "1:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "2:00");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "2:15");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "2:30");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.TIME_START, "2:45");
-        db.insert(SQLConstants.TIME_TABLE, null, values);
-
-        // initial room inserts
-
+        // inserting room data
         values = new ContentValues();
         values.put(SQLConstants.ROOM_NO, "001");
         values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
@@ -361,6 +53,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
         values.put(SQLConstants.HAS_LCD, "YES");
         db.insert(SQLConstants.ROOM_TABLE, null, values);
+
         values = new ContentValues();
         values.put(SQLConstants.ROOM_NO, "103");
         values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
@@ -497,7 +190,6 @@ public class SQLHelper extends SQLiteOpenHelper {
 
         Log.d("SQLiteDemo", "onUpgrade: Version = " + newVersion);
         db.execSQL("DROP TABLE IF EXISTS " + SQLConstants.USER_TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + SQLConstants.TIME_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SQLConstants.ROOM_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SQLConstants.RES_TABLE);
         onCreate(db);
@@ -517,17 +209,16 @@ public class SQLHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         values = new ContentValues();
         values.put(SQLConstants.ROOM_ID, r.getRoom_id());
-        values.put(SQLConstants.TIME_ID, r.getTime_id());
         values.put(SQLConstants.USER_ID, r.getUser_id());
-        values.put(SQLConstants.length, r.getLength());
-        values.put(SQLConstants.date, r.getDate());
+        values.put(SQLConstants.DATE, r.getDate());
+        values.put(SQLConstants.TIME_START, r.getStart());
+        values.put(SQLConstants.TIME_END, r.getEnd());
         db.insert(SQLConstants.RES_TABLE, null, values);
         Log.d("SQLiteDemo", r.getRes_id() + " added");
         db.close();
     }
 
     public ArrayList<User> getUserList () {
-
         SQLiteDatabase db = this.getWritableDatabase();
         cursor = db.query(SQLConstants.USER_TABLE,
                 new String[] {SQLConstants.USER_ID, SQLConstants.USER_EMAIL, SQLConstants.USER_PASS},
@@ -546,25 +237,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         return userList;
     }
 
-    public ArrayList<Time> getTimeList () {
-
-        SQLiteDatabase db = this.getWritableDatabase();
-        cursor = db.query(SQLConstants.TIME_TABLE,
-                new String[] {SQLConstants.TIME_START},
-                null, null, null, null, SQLConstants.TIME_START);
-
-        //write contents of Cursor to list
-        timeList = new ArrayList<>();
-        while (cursor.moveToNext()) {
-            String str = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
-            timeList.add(new Time(str));
-        }
-        db.close();
-        return timeList;
-    }
-
     public ArrayList<Room> getRoomList () {
-
         SQLiteDatabase db = this.getWritableDatabase();
         cursor = db.query(SQLConstants.ROOM_TABLE,
                 new String[] {SQLConstants.ROOM_NO, SQLConstants.ROOM_LOCATION, SQLConstants.HAS_LCD},
