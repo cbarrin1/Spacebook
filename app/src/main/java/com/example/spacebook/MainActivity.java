@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // TEST CODE FOR DB
-       /* cursor = db.rawQuery("SELECT * FROM ROOMS WHERE roomNo ='001'",null);
+        cursor = db.rawQuery("SELECT * FROM ROOMS WHERE roomNo ='001'",null);
         while (cursor.moveToNext()) {
             String roomno = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
             String loc = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_LOCATION));
@@ -66,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
             System.out.println(item);
         }
         //END TEST CODE
-        */
+
     }
 
     private void validate (String username, String password) {
