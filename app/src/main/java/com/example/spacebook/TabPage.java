@@ -13,7 +13,7 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab_layout);
 
-/*
+
         tabs = findViewById(R.id.tabhost);
         tabs.setup();
 
@@ -32,7 +32,7 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
         spec.setContent(R.id.Make_Reservations);            //add view tab content
         spec.setIndicator("Make Reservations");
         tabs.addTab(spec);
-*/
+
     }
 
     @Override

@@ -70,13 +70,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void validate (String username, String password) {
-        if ((username.equals("admin")) && (password.equals("1234"))) {
+        String pass = "";
+        try {
+            cursor = db.rawQuery("SELECT password FROM USERS WHERE email = ?", new String[]{username});
+            while (cursor.moveToNext()) {
+                pass = cursor.getString(cursor.getColumnIndex(SQLConstants.USER_PASS));
+            }
+        } catch(Exception e) { e.printStackTrace();}
 
+        if ((pass.equals(password))){
             // PLEASE connect THE tab page class to the activity that contains the tabs
             Intent intent = new Intent(MainActivity.this, TabPage.class);
             startActivity(intent);
             Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();
         }
+        else
+            Toast.makeText(this, "Login FAILED",Toast.LENGTH_SHORT).show();
 
     }
 
