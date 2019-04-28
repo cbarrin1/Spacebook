@@ -73,8 +73,8 @@ public class MainActivity extends AppCompatActivity {
         if ((username.equals("admin")) && (password.equals("1234"))) {
 
             // PLEASE connect THE tab page class to the activity that contains the tabs
-            //Intent intent = new Intent(MainActivity.this, TabPage.class);
-            //startActivity(intent);
+            Intent intent = new Intent(MainActivity.this, TabPage.class);
+            startActivity(intent);
             Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();
         }
 
