@@ -4,12 +4,14 @@ import android.database.Cursor;
 import android.content.Intent;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -23,6 +25,16 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private Button login;
     private Cursor cursor;
+    Handler handler = new Handler();
+
+    Runnable runnable = new Runnable() {
+        @Override
+        public void run() {
+            username.setVisibility(View.VISIBLE);
+            password.setVisibility(View.VISIBLE);
+            login.setVisibility(View.VISIBLE);
+        }
+    };
 
 
 
@@ -34,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
         username = findViewById(R.id.editText1);
         password = findViewById(R.id.editText2);
         login = findViewById(R.id.button2);
+        handler.postDelayed(runnable,2500);
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
         } catch(Exception e) { e.printStackTrace();}
 
         if ((pass.equals(password))){
-            // PLEASE connect THE tab page class to the activity that contains the tabs
+
             Intent intent = new Intent(MainActivity.this, TabPage.class);
             intent.putExtra("user", username);
             startActivity(intent);

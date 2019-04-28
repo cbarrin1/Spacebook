@@ -6,8 +6,10 @@ import android.support.v4.app.FragmentActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CalendarView;
 import android.widget.ListView;
 import android.widget.TabHost;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -21,6 +23,8 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
     private ListView listview;
     private ArrayAdapter<String> adapt = null;
 
+    private CalendarView calendarView;
+
 
     TabHost tabs;
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +34,15 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
 
         String user = getIntent().getStringExtra("user");
         System.out.println(user);
+
+        calendarView = findViewById(R.id.calendarView);
+
+        calendarView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
 
         try {
             helper = new SQLHelper(this);
