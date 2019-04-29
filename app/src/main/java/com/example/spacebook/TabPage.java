@@ -1,13 +1,19 @@
 package com.example.spacebook;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TabHost;
 import android.widget.Toast;
@@ -29,6 +35,28 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
     private CalendarView calendar;
 
     TabHost tabs;
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.menu,menu);
+        return true;
+    }
+    //this gets the clicked item from the menu
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_settings:
+                break;
+            case R.id.menu_logout:
+                SharedPreferences.Editor editor = MainActivity.sharedpreferences.edit();
+                editor.remove("LOGIN");
+                editor.apply();
+                Intent intent = new Intent(TabPage.this, MainActivity.class);
+                startActivity(intent);
+        }
+        return super.onOptionsItemSelected(item);
+    }
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -92,6 +120,9 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
                 int day = cal.get(Calendar.DAY_OF_MONTH);
                 int yr = cal.get(Calendar.YEAR);
                 int mth = cal.get(Calendar.MONTH);
+
+
+                 Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
 
                 //cleaning up data to match database format
                 mth++;

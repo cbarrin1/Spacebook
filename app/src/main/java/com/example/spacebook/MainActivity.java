@@ -1,5 +1,6 @@
 package com.example.spacebook;
 
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.content.Intent;
 import android.database.SQLException;
@@ -25,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText password;
     private Button login;
     private Cursor cursor;
+    public static SharedPreferences sharedpreferences;
     Handler handler = new Handler();
 
     Runnable runnable = new Runnable() {
@@ -37,7 +39,6 @@ public class MainActivity extends AppCompatActivity {
     };
 
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +48,16 @@ public class MainActivity extends AppCompatActivity {
         password = findViewById(R.id.editText2);
         login = findViewById(R.id.button2);
         handler.postDelayed(runnable,2500);
+
+        sharedpreferences=getApplicationContext().getSharedPreferences("Preferences", 0);
+        String user_login = sharedpreferences.getString("LOGIN", null);
+
+        if (user_login != null) {
+            Intent intent = new Intent(MainActivity.this, TabPage.class);
+            //adding extra content to intent to pass username
+            intent.putExtra("user", username.getText().toString());
+            startActivity(intent);
+        }
 
         login.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -87,6 +98,9 @@ public class MainActivity extends AppCompatActivity {
             //adding extra content to intent to pass username
             intent.putExtra("user", username);
             startActivity(intent);
+            SharedPreferences.Editor editor = sharedpreferences.edit();
+            editor.putString("LOGIN", username);
+            editor.apply();
             Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();
         }
         else{
