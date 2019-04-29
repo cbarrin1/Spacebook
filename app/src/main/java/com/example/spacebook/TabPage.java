@@ -13,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.ListView;
+import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TabHost;
@@ -20,9 +21,10 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import android.widget.Button;
 
 
-public class TabPage extends FragmentActivity implements AdapterView.OnItemSelectedListener{
+public class TabPage extends FragmentActivity implements AdapterView.OnItemSelectedListener {
 
     //DB objects
     private SQLiteDatabase db;
@@ -33,16 +35,23 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
     private TextView resList;
     private TextView dateChosen;
 
+    private RadioButton library;
+    private RadioButton stu;
+
     private CalendarView calendar;
+
+    private String timeChosen;
+    private Button seeAvailable;
 
     TabHost tabs;
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu,menu);
+        inflater.inflate(R.menu.menu, menu);
         return true;
     }
+
     //this gets the clicked item from the menu
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -57,6 +66,8 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
                 startActivity(intent);
         }
         return super.onOptionsItemSelected(item);
+
+
     }
 
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +82,15 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
         //list of user reservations
         resList = findViewById(R.id.textView);
         //calendar
-        calendar = (CalendarView)findViewById(R.id.calendarView);
+        calendar = (CalendarView) findViewById(R.id.calendarView);
+        //displays date chosen
+        dateChosen = findViewById(R.id.textView9);
+        dateChosen.setText("(choose a date on calendar)");
+
+        //radio buttons for location
+        library = findViewById(R.id.radioButton);
+        stu = findViewById(R.id.radioButton2);
+
 
         //getting the username from previous activity and saving for future use
         String user = getIntent().getStringExtra("user");
@@ -92,7 +111,9 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
                 resList.append("Room: " + room + "   Date: " + date + "   Start Time: " + start + "   End Time: " + end + "\n");
 
             }
-        } catch(Exception e) { e.printStackTrace();}
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
         // Initialize a TabSpec for tab1 and add it to the TabHost
@@ -123,9 +144,9 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
                 int mth = cal.get(Calendar.MONTH);
 
 
-                 Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
-                 dateChosen = findViewById(R.id.textView9);
-                 dateChosen.setText(month + "/" + day + "/" + year);
+                Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
+
+                dateChosen.setText(month + "/" + day + "/" + year);
 
                 //cleaning up data to match database format
                 mth++;
@@ -151,15 +172,40 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
                         System.out.println("Room: " + room + "   Date: " + date + "   Start Time: " + start + "   End Time: " + end + "\n");
 
                     }
-                } catch(Exception e) { e.printStackTrace();}
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
             }
         });
 
     }
 
-    @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+        // On selecting a spinner item
+        String item = parent.getItemAtPosition(position).toString();
+
+        //spinner
+        if (item.equals("8:00AM - 10:00AM")) {
+            timeChosen = "8:00AM - 10:00AM";
+        } else if (item.equals("10:00AM - 12:00PM")) {
+            timeChosen = "10:00AM - 12:00PM";
+        } else if (item.equals("12:00PM - 2:00PM")) {
+            timeChosen = "12:00PM - 2:00PM";
+        } else if (item.equals("2:00PM - 4:00PM")) {
+            timeChosen = "2:00PM - 4:00PM";
+        } else if (item.equals("4:00PM - 6:00PM")) {
+            timeChosen = "4:00PM - 6:00PM";
+        } else if (item.equals("6:00PM - 8:00PM")) {
+            timeChosen = "6:00PM - 8:00PM";
+        } else if (item.equals("8:00PM - 10:00PM")) {
+            timeChosen = "8:00PM - 10:00PM";
+        } else if (item.equals("10:00PM - 12:00AM")) {
+            timeChosen = "10:00PM - 12:00AM";
+        }
+
+
+
 
     }
 
@@ -167,6 +213,4 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
-
-
 }

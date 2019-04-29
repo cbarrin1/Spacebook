@@ -9,9 +9,14 @@
     <string name="prompt">Choose time</string>
 
     <string-array name="resource_arrays">
-        <item>8-10</item>
-        <item>10-12</item>
-        <item>12-2</item>
-        <item>2-4</item>
+        <item>8:00AM-10:00AM</item>
+        <item>10:00AM-12:00PM</item>
+        <item>12:00PM-2:00PM</item>
+        <item>2:00PM-4:00PM</item>
+        <item>4:00PM-6:00PM</item>
+        <item>6:00PM-8:00PM</item>
+        <item>8:00PM-10:00PM</item>
+        <item>10:00PM-12:00AM</item>
+
     </string-array>
 </resources>
