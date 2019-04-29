@@ -64,7 +64,7 @@
 
                 <TableRow
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" >
+                    android:layout_height="wrap_content">
 
                     <TextView
                         android:id="@+id/textView8"
@@ -80,9 +80,63 @@
 
                 </TableRow>
 
+                <TableRow
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
 
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="81dp"
+                    android:orientation="vertical">
 
+                    <TextView
+                        android:id="@+id/textView3"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Location" />
 
+                    <RadioButton
+                        android:id="@+id/radioButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Library" />
+
+                    <RadioButton
+                        android:id="@+id/radioButton2"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Student Center" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Time" />
+                    <Spinner
+                        android:id="@+id/spinner1"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:entries="@array/resource_arrays"
+                        android:prompt="@string/prompt" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <Button
+                            android:id="@+id/button7"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="See available rooms" />
+                    </LinearLayout>
+                </LinearLayout>
 
 
             </LinearLayout>
@@ -95,7 +149,7 @@
 
 
         </FrameLayout>
-    </LinearLayout>
 
+    </LinearLayout>
 
 </TabHost>
