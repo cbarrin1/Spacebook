@@ -146,7 +146,7 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
 
                 Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
 
-                dateChosen.setText(month + "/" + day + "/" + year);
+                dateChosen.setText((month+1) + "/" + day + "/" + year);
 
                 //cleaning up data to match database format
                 mth++;
