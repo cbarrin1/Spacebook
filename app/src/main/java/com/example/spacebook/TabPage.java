@@ -1,11 +1,18 @@
 package com.example.spacebook;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -25,11 +32,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import android.view.View.OnClickListener;
+import android.app.PendingIntent;
 
 
 import android.widget.Button;
 
-public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener{
 
     //DB objects
     private SQLiteDatabase db;
@@ -51,6 +60,13 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private Button seeAvailable;
     private Spinner spin;
     private Spinner spin2;
+
+    private NotificationManager mNotificationManager;
+    private int SIMPLE_NOTIFCATION_ID = 25;
+    private NotificationCompat.Builder mBuilder = null;
+
+    private String textTitle = "Simple Notification Example";
+    private String textContent = "Get back to Application by clicking me";
 
     //date format for dateChosen
     SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy");
@@ -95,6 +111,36 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         tabs.setup();
         TabHost.TabSpec spec;
 
+
+        mNotificationManager =
+                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("default",
+                    "Channel foobar",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Channel description");
+            channel.setLightColor(Color.GREEN);
+            channel.enableVibration(true);
+            mNotificationManager.createNotificationChannel(channel);
+        }
+        Intent notifyIntent = new Intent(this, TabPage.class);
+
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+        mBuilder = new NotificationCompat.Builder(this, "default")
+                .setContentIntent(pendingIntent)
+                .setContentTitle(textTitle)
+                .setContentText(textContent)
+                .setSmallIcon(R.drawable.droid)
+                .setAutoCancel(true)     //cancel Notification after clicking on it
+                //set Android to vibrate when notified
+                .setVibrate(new long[] {1000, 1000, 2000, 2000})
+                //allow heads up notification; otherwise use PRIORITY_DEFAULT
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+
         //list of user reservations
         resList = findViewById(R.id.textView);
         //calendar
@@ -126,9 +172,15 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         //button to see results
        seeAvailable = findViewById(R.id.button5);
 
-        seeAvailable.setOnClickListener(new View.OnClickListener() {
+       seeAvailable.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View v) {
+
+
+                mNotificationManager.notify(SIMPLE_NOTIFCATION_ID, mBuilder.build());
+
+
                 //query all reservations for selected day
                 try {
                     list = new ArrayList<>();
@@ -230,6 +282,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         });
 
 
+
+
     }
 
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -277,4 +331,14 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
+
+
+
+    //clear notification
+        //cancel.setOnClickListener(new View.OnClickListener() {
+        //public void onClick(View v) {
+          //  mNotificationManager.cancel(SIMPLE_NOTFICATION_ID);
+        //}
+    //});
 }
