@@ -1,11 +1,19 @@
 package com.example.spacebook;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -52,6 +60,13 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private Button seeAvailable;
     private Spinner spin;
     private Spinner spin2;
+
+
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder = null;
+    private String textTitle = "Simple Notification Example";
+    private String textContent = "Get back to Application by clicking me";
+    private int SIMPLE_NOTFICATION_ID = 25;
 
     //date format for dateChosen
     SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy");
@@ -124,7 +139,40 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
 
 
+        mNotificationManager =
+                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
 
+        //As of API 26 Notification Channels must be assigned to a channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("default",
+                    "Channel foobar",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Channel description");
+            channel.setLightColor(Color.GREEN);
+            channel.enableVibration(true);
+            mNotificationManager.createNotificationChannel(channel);
+        }
+        //create intent for action when notification selected
+        //from expanded status bar
+        Intent notifyIntent = new Intent(this, TabPage.class);
+
+        //create pending intent to wrap intent so that it
+        //will fire when notification selected.
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        //set parameter values for Notification
+        mBuilder = new NotificationCompat.Builder(this, "default")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.droid)
+                .setContentTitle(textTitle)
+                .setContentText(textContent)
+                .setAutoCancel(true)     //cancel Notification after clicking on it
+                //set Android to vibrate when notified
+                .setVibrate(new long[] {1000, 1000, 2000, 2000})
+                //allow heads up notification; otherwise use PRIORITY_DEFAULT
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
 
         //button to see results
@@ -133,6 +181,9 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         seeAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mNotificationManager.notify(SIMPLE_NOTFICATION_ID,
+                        mBuilder.build());
                 //query all reservations for selected day
                 try {
                     cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
