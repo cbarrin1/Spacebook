@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -39,8 +40,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private TextView resList;
     private TextView dateChosen;
 
-    private RadioButton library;
-    private RadioButton stu;
+    private CheckBox library;
+    private CheckBox stu;
 
     private CalendarView calendar;
 
@@ -49,6 +50,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private String endTime;
     private Button seeAvailable;
     private Spinner spin;
+    private Spinner spin2;
 
     //date format for dateChosen
     SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy");
@@ -57,6 +59,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
     String selectedDate;
     TabHost tabs;
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,14 +109,22 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         dateChosen.setText(today);
 
         //radio buttons for location
-        library = findViewById(R.id.radioButton);
-        stu = findViewById(R.id.radioButton2);
+        library = findViewById(R.id.checkBox);
+        stu = findViewById(R.id.checkBox1);
 
-        spin = findViewById(R.id.spinner1);
+        spin = findViewById(R.id.spinner4);
         spin.setOnItemSelectedListener(this);
 
+        spin2 = findViewById(R.id.spinner6);
+        spin2.setOnItemSelectedListener(this);
+
+
+
+
+
+
         //button to see results
-        seeAvailable = findViewById(R.id.button7);
+       seeAvailable = findViewById(R.id.button5);
 
         seeAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,6 +215,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
                 Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
 
+                // sets textview to date chosen on calculator
                 dateChosen.setText((month+1) + "/" + day + "/" + year);
 
                 //cleaning up data to match database format
