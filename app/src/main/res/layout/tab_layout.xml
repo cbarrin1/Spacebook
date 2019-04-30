@@ -74,7 +74,7 @@
                         android:layout_width="178dp"
                         android:layout_height="wrap_content"
                         android:text="Date Selected"
-                        android:textColor="@color/white"
+                        android:textColor="@color/colorAccent"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
 
@@ -103,23 +103,31 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Location"
-                        android:textColor="@color/white"
+                        android:textColor="@color/colorAccent"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
 
-                    <RadioButton
-                        android:id="@+id/radioButton"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="Library"
-                        android:textSize="20sp"/>
 
-                    <RadioButton
-                        android:id="@+id/radioButton2"
-                        android:layout_width="match_parent"
+
+                    <CheckBox
+                        android:id="@+id/checkBox"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="Student Center"
-                        android:textSize="20sp"/>
+                        android:layout_weight="1"
+                        android:text="Library" />
+
+                    <CheckBox
+                        android:id="@+id/checkBox1"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="Student Center" />
+
+
+
+
+
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -132,28 +140,84 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="Time"
-                        android:textColor="@color/white"
+                        android:textColor="@color/colorAccent"
                         android:textSize="24sp"
                         android:textStyle="bold"/>
-                    <Spinner
-                        android:id="@+id/spinner1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:entries="@array/resource_arrays"
-                        android:prompt="@string/prompt"
-                        android:textSize="20sp"
-                        />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical">
 
-                        <Button
-                            android:id="@+id/button7"
+                        <LinearLayout
                             android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:text="See available rooms" />
+                            android:layout_height="match_parent"
+                            android:orientation="horizontal">
+
+                        <TableLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TableRow>
+                                <TextView
+                                    android:id="@+id/textView10"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="Start Time"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp"
+                                    android:textStyle="italic"
+                                    android:layout_weight="1"/>
+
+                                <TextView
+                                    android:id="@+id/textView11"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:text="End Time"
+                                    android:textColor="@color/white"
+                                    android:textSize="15sp"
+                                    android:textStyle="italic"
+                                    android:layout_weight="1"/>
+
+
+                            </TableRow>
+                        <TableRow>
+
+                            <Spinner
+                                android:id="@+id/spinner4"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:entries="@array/start_times"
+                                android:prompt="@string/prompt"/>
+
+
+
+                            <Spinner
+                                android:id="@+id/spinner6"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:entries="@array/end_times"
+                                android:prompt="@string/prompt"/>
+
+                        </TableRow>
+
+                            <TableRow>
+                                <Button
+                                    android:id="@+id/button5"
+                                    android:layout_width="73dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="See available rooms" />
+                            </TableRow>
+                        </TableLayout>
+
+
+
+
+
+                        </LinearLayout>
                     </LinearLayout>
                 </LinearLayout>
 

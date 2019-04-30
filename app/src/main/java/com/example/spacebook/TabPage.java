@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -24,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 
 import android.widget.Button;
@@ -39,8 +41,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private TextView resList;
     private TextView dateChosen;
 
-    private RadioButton library;
-    private RadioButton stu;
+    private CheckBox library;
+    private CheckBox stu;
 
     private CalendarView calendar;
 
@@ -49,14 +51,20 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private String endTime;
     private Button seeAvailable;
     private Spinner spin;
+    private Spinner spin2;
 
     //date format for dateChosen
     SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy");
+    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+    Date rangeStart, rangeEnd, dbStart, dbEnd, spinner;
+    public static final long HOUR = 3600*1000;
 
-    private ArrayList<Reservation> list;
+    ArrayList<Reservation> reservations;
 
     String selectedDate;
     TabHost tabs;
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -105,21 +113,28 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         dateChosen.setText(today);
 
         //radio buttons for location
-        library = findViewById(R.id.radioButton);
-        stu = findViewById(R.id.radioButton2);
+        library = findViewById(R.id.checkBox);
+        stu = findViewById(R.id.checkBox1);
 
-        spin = findViewById(R.id.spinner1);
+        spin = findViewById(R.id.spinner4);
         spin.setOnItemSelectedListener(this);
 
+        spin2 = findViewById(R.id.spinner6);
+        spin2.setOnItemSelectedListener(this);
+
+
+
+
+
+
         //button to see results
-        seeAvailable = findViewById(R.id.button7);
+       seeAvailable = findViewById(R.id.button5);
 
         seeAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //query all reservations for selected day
                 try {
-                    list = new ArrayList<>();
                     cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
                     while (cursor.moveToNext()) {
                         String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
@@ -127,28 +142,28 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                         String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
                         String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                        //set up time format
-                        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
                         //convert all time strings to date objects
-                        Date dbStart = format.parse(start);
-                        Date dbEnd = format.parse(end);
-                        Date selectStart = format.parse(startTime);
-                        Date selectEnd = format.parse(endTime);
+                        try {
+                            rangeStart = format.parse(startTime);
+                            rangeEnd = format.parse(endTime);
+                            dbStart = format.parse(start);
+                            dbEnd = format.parse(end);
+                        } catch (Exception e) {e.printStackTrace();}
 
-                        //if there is a reservation between the selected range, it is added to list
-                        //this list will be pass to search results activity in order to remove times already reserved
-                        if (dbStart.equals(selectStart) || dbStart.equals(selectEnd) || (dbStart.after(selectStart)) && dbStart.before(selectEnd)){
-                            list.add(new Reservation(room, date, start, end));
+                        if (dbEnd.after(rangeStart) || dbStart.before(rangeEnd)){
+                            reservations.add(new Reservation(room, date, start, end));
                         }
+
                     }
 
                     // moves to search results page
                     Intent intent = new Intent(TabPage.this, SearchResultPage.class);
                     Bundle args = new Bundle();
-                    args.putSerializable("ARRAYLIST",list);
+                    args.putSerializable("ARRAYLIST",reservations);
                     intent.putExtra("BUNDLE",args);
+                    intent.putExtra("start", startTime);
+                    intent.putExtra("end", endTime);
                     startActivity(intent);
-
 
                 } catch(Exception e) {e.printStackTrace();}
             }
@@ -203,6 +218,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
                 Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
 
+                // sets textview to date chosen on calculator
                 dateChosen.setText((month+1) + "/" + day + "/" + year);
 
                 //cleaning up data to match database format
@@ -219,43 +235,58 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
     }
 
+    int i;
+    String s;
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
+        String ampm;
 
-        //spinner
-        if (item.equals("8:00AM-10:00AM")) {
-            timeChosen = "8:00AM - 10:00AM";
-            startTime = "08:00";
-            endTime = "10:00";
-        } else if (item.equals("10:00AM-12:00PM")) {
-            timeChosen = "10:00AM - 12:00PM";
-            startTime = "10:00";
-            endTime = "12:00";
-        } else if (item.equals("12:00PM-2:00PM")) {
-            timeChosen = "12:00PM - 2:00PM";
-            startTime = "12:00";
-            endTime = "14:00";
-        } else if (item.equals("2:00PM-4:00PM")) {
-            timeChosen = "2:00PM - 4:00PM";
-            startTime = "14:00";
-            endTime = "16:00";
-        } else if (item.equals("4:00PM-6:00PM")) {
-            timeChosen = "4:00PM - 6:00PM";
-            startTime = "16:00";
-            endTime = "18:00";
-        } else if (item.equals("6:00PM-8:00PM")) {
-            timeChosen = "6:00PM - 8:00PM";
-            startTime = "18:00";
-            endTime = "20:00";
-        } else if (item.equals("8:00PM-10:00PM")) {
-            timeChosen = "8:00PM - 10:00PM";
-            startTime = "20:00";
-            endTime = "22:00";
-        } else if (item.equals("10:00PM-12:00AM")) {
-            timeChosen = "10:00PM - 12:00AM";
-            startTime = "22:00";
-            endTime = "24:00";
+        if(parent.getId() == R.id.spinner4)
+        {
+            ampm = item.substring(Math.max(item.length() - 2, 0));
+            if(ampm.equals("PM")){
+
+                s = item.substring(0, item.indexOf("P"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 12){
+                    i += 12;
+                    s = s.substring(s.indexOf(":"));
+                    s = i + s;
+                }
+                startTime = s;
+            }
+            else{
+                s = item.substring(0, item.indexOf("A"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 10){
+                    s = "0" + s;
+                }
+                startTime = s;
+            }
+        }
+        else if(parent.getId() == R.id.spinner6)
+        {
+            ampm = item.substring(Math.max(item.length() - 2, 0));
+            if(ampm.equals("PM")){
+
+                s = item.substring(0, item.indexOf("P"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 12){
+                    i += 12;
+                    s = s.substring(s.indexOf(":"));
+                    s = i + s;
+                }
+                endTime = s;
+            }
+            else{
+                s = item.substring(0, item.indexOf("A"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 10){
+                    s = "0" + s;
+                }
+                endTime = s;
+            }
         }
 
     }
