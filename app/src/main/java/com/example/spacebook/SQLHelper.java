@@ -202,7 +202,7 @@ public class SQLHelper extends SQLiteOpenHelper {
 
         values = new ContentValues();
         values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
-        values.put(SQLConstants.ROOM_NO, "001");
+        values.put(SQLConstants.ROOM_NO, "219");
         values.put(SQLConstants.DATE, "2019-04-01");
         values.put(SQLConstants.TIME_START, "09:00");
         values.put(SQLConstants.TIME_END, "09:30");
@@ -223,6 +223,23 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.TIME_START, "08:00");
         values.put(SQLConstants.TIME_END, "09:30");
         db.insert(SQLConstants.RES_TABLE, null, values);
+
+        values = new ContentValues();
+        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
+        values.put(SQLConstants.ROOM_NO, "212");
+        values.put(SQLConstants.DATE, "2019-04-01");
+        values.put(SQLConstants.TIME_START, "08:00");
+        values.put(SQLConstants.TIME_END, "09:30");
+        db.insert(SQLConstants.RES_TABLE, null, values);
+
+
+
+
+
+
+
+
+
 
     }
 
@@ -253,7 +270,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     public void addRes(Reservation r){
         SQLiteDatabase db = this.getWritableDatabase();
         values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, r.getRoom_id());
+        values.put(SQLConstants.ROOM_NO, r.getRoomNo());
         values.put(SQLConstants.USER_EMAIL, r.getUser_email());
         values.put(SQLConstants.DATE, r.getDate());
         values.put(SQLConstants.TIME_START, r.getStart());

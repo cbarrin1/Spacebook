@@ -85,20 +85,24 @@ public class MainActivity extends AppCompatActivity {
             }
         } catch(Exception e) {e.printStackTrace();}
 
-        //compares user input password with password in DB
-        //password is stored in plain text, as all accounts are just test accounts
-        if ((pass.equals(password))){
-            //moves to next activity
-            Intent intent = new Intent(MainActivity.this, TabPage.class);
-            startActivity(intent);
+        if (!pass.isEmpty()){
+            //compares user input password with password in DB
+            //password is stored in plain text, as all accounts are just test accounts
+            if ((pass.equals(password))){
+                //moves to next activity
+                Intent intent = new Intent(MainActivity.this, TabPage.class);
+                startActivity(intent);
 
-            SharedPreferences.Editor editor = sharedpreferences.edit();
-            editor.putString("LOGIN", username);
-            editor.apply();
-            Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();
+                SharedPreferences.Editor editor = sharedpreferences.edit();
+                editor.putString("LOGIN", username);
+                editor.apply();
+                Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();
+            }
+            else
+                Toast.makeText(this, "Login FAILED",Toast.LENGTH_SHORT).show();
         }
-        else
-            Toast.makeText(this, "Login FAILED",Toast.LENGTH_SHORT).show();
+
+
     }
 
     @Override

@@ -15,8 +15,8 @@ public class Reservation implements java.io.Serializable{
     public int getRes_id() {return res_id;}
     public void setRes_id(int id) {this.res_id = id;}
 
-    public String getRoom_id() {return room_no;}
-    public void setRoom_id(String room) {this.room_no = room;}
+    public String getRoomNo() {return room_no;}
+    public void setRoomNo(String room) {this.room_no = room;}
 
     public String getUser_email() {return user_email;}
     public void setUser_email(String email) {this.user_email = email;}
