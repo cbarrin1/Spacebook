@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -27,7 +28,7 @@ import java.util.Date;
 
 import android.widget.Button;
 
-public class TabPage extends FragmentActivity implements AdapterView.OnItemSelectedListener {
+public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
 
     //DB objects
     private SQLiteDatabase db;
@@ -61,6 +62,7 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu, menu);
+        super.onCreateOptionsMenu(menu);
         return true;
     }
 
@@ -213,6 +215,7 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
 
             }
         });
+
 
     }
 

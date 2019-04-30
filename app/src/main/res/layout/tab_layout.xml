@@ -11,7 +11,7 @@
             android:id="@android:id/tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/colorPrimaryDark" />
+            android:background="@drawable/gradient_bg" />
 
         <FrameLayout android:id="@android:id/tabcontent"
             android:layout_width="match_parent"
@@ -43,8 +43,8 @@
                         android:id="@+id/button"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Cancel Reservations"
-                        android:background="@color/colorPrimaryDark"/>
+                        android:background="@drawable/gradient_bg"
+                        android:text="Cancel Reservations" />
 
                 </LinearLayout>
             </LinearLayout>
