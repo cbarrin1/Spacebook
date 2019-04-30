@@ -15,7 +15,7 @@ public class SQLHelper extends SQLiteOpenHelper {
     private Cursor cursor;
 
     private ArrayList<User> userList;
-    private ArrayList<Room> roomList;
+    private ArrayList<String> roomList;
     private ArrayList<Reservation> resList;
 
 
@@ -197,6 +197,30 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.ROOM_NO, "001");
         values.put(SQLConstants.DATE, "2019-04-01");
         values.put(SQLConstants.TIME_START, "08:00");
+        values.put(SQLConstants.TIME_END, "08:30");
+        db.insert(SQLConstants.RES_TABLE, null, values);
+
+        values = new ContentValues();
+        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
+        values.put(SQLConstants.ROOM_NO, "001");
+        values.put(SQLConstants.DATE, "2019-04-01");
+        values.put(SQLConstants.TIME_START, "09:00");
+        values.put(SQLConstants.TIME_END, "09:30");
+        db.insert(SQLConstants.RES_TABLE, null, values);
+
+        values = new ContentValues();
+        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
+        values.put(SQLConstants.ROOM_NO, "002");
+        values.put(SQLConstants.DATE, "2019-04-01");
+        values.put(SQLConstants.TIME_START, "08:00");
+        values.put(SQLConstants.TIME_END, "09:30");
+        db.insert(SQLConstants.RES_TABLE, null, values);
+
+        values = new ContentValues();
+        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
+        values.put(SQLConstants.ROOM_NO, "201");
+        values.put(SQLConstants.DATE, "2019-04-01");
+        values.put(SQLConstants.TIME_START, "08:00");
         values.put(SQLConstants.TIME_END, "09:30");
         db.insert(SQLConstants.RES_TABLE, null, values);
 
@@ -279,20 +303,17 @@ public class SQLHelper extends SQLiteOpenHelper {
     }
 
     //gets list of all rooms in DB
-    public ArrayList<Room> getRoomList () {
+    public ArrayList<String> getRoomList () {
         SQLiteDatabase db = this.getWritableDatabase();
         cursor = db.query(SQLConstants.ROOM_TABLE,
-                new String[] {SQLConstants.ROOM_NO, SQLConstants.ROOM_LOCATION, SQLConstants.HAS_LCD},
+                new String[] {SQLConstants.ROOM_NO},
                 null, null, null, null, SQLConstants.ROOM_NO);
 
         //write contents of Cursor to list
         roomList = new ArrayList<>();
         while (cursor.moveToNext()) {
             String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
-            String location = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_LOCATION));
-            String lcd = cursor.getString(cursor.getColumnIndex(SQLConstants.HAS_LCD));
-
-            roomList.add(new Room(room, location, lcd));
+            roomList.add(room);
         }
         return roomList;
     }

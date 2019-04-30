@@ -14,18 +14,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     //DB objects
     private SQLiteDatabase db;
     private SQLHelper helper;
+    private Cursor cursor;
 
     private EditText username;
     private EditText password;
     private Button login;
-    private Cursor cursor;
+
     public static SharedPreferences sharedpreferences;
     Handler handler = new Handler();
 
@@ -38,12 +38,12 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // UI elements
         username = findViewById(R.id.editText1);
         password = findViewById(R.id.editText2);
         login = findViewById(R.id.button2);
@@ -54,8 +54,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (user_login != null) {
             Intent intent = new Intent(MainActivity.this, TabPage.class);
-            //adding extra content to intent to pass username
-            intent.putExtra("user", username.getText().toString());
             startActivity(intent);
         }
 
@@ -65,17 +63,13 @@ public class MainActivity extends AppCompatActivity {
                 validate(username.getText().toString(), password.getText().toString());
             }
         });
+
         //SQLite helper instance
         helper = new SQLHelper(this);
-
         //opens DB
         try {
             db = helper.getWritableDatabase();
-        } catch (SQLException e) {
-            Log.d("Spacebook", "Create database failed");
-        }
-
-        //helper.addRes(new Reservation("001", "test@bentley.edu", "2019-04-27", "08:00","09:00"));
+        } catch (SQLException e) {Log.d("Spacebook", "Create database failed");}
 
     }
 
@@ -88,27 +82,22 @@ public class MainActivity extends AppCompatActivity {
             while (cursor.moveToNext()) {
                 pass = cursor.getString(cursor.getColumnIndex(SQLConstants.USER_PASS));
             }
-        } catch(Exception e) { e.printStackTrace();}
+        } catch(Exception e) {e.printStackTrace();}
 
         //compares user input password with password in DB
         //password is stored in plain text, as all accounts are just test accounts
         if ((pass.equals(password))){
             //moves to next activity
             Intent intent = new Intent(MainActivity.this, TabPage.class);
-            //adding extra content to intent to pass username
-            intent.putExtra("user", username);
             startActivity(intent);
+
             SharedPreferences.Editor editor = sharedpreferences.edit();
             editor.putString("LOGIN", username);
             editor.apply();
             Toast.makeText(this, "Login Successful",Toast.LENGTH_SHORT).show();
         }
-        else{
+        else
             Toast.makeText(this, "Login FAILED",Toast.LENGTH_SHORT).show();
-        }
-
-
-
     }
 
     @Override
@@ -117,14 +106,11 @@ public class MainActivity extends AppCompatActivity {
         if(db != null)
             db.close();
     }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if(db != null) {
             db.close();
-            Log.d("Spacebook", "DB CLOSED");
         }
-
     }
 }

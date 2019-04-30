@@ -1,10 +1,13 @@
 package com.example.spacebook;
 
+import java.text.SimpleDateFormat;
+
 public class SQLConstants {
 
     public static final String DATABASE_NAME = "spacebook.db";
     public static final int DATABASE_VERSION = 1;
     public static final String KEY_ID = " integer primary key autoincrement";
+    SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // USERS table
     public static final String USER_TABLE = "users";

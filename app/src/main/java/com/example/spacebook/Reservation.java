@@ -2,7 +2,7 @@ package com.example.spacebook;
 
 import android.support.annotation.NonNull;
 
-public class Reservation {
+public class Reservation implements java.io.Serializable{
 
     private int res_id;
     private String room_no;
@@ -17,7 +17,6 @@ public class Reservation {
 
     public String getRoom_id() {return room_no;}
     public void setRoom_id(String room) {this.room_no = room;}
-
 
     public String getUser_email() {return user_email;}
     public void setUser_email(String email) {this.user_email = email;}
@@ -39,6 +38,15 @@ public class Reservation {
         this.start = start;
         this.end = end;
     }
+
+    public Reservation(String room, String date, String start, String end){
+        super();
+        this.room_no = room;
+        this.date = date;
+        this.start = start;
+        this.end = end;
+    }
+
     @NonNull
     public String toString(){
         return room_no + " " + user_email + " " +  date + " " + start + " " + end;
