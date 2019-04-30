@@ -134,6 +134,7 @@ public class TabPage extends FragmentActivity implements AdapterView.OnItemSelec
                         Date selectEnd = format.parse(endTime);
 
                         //if there is a reservation between the selected range, it is added to list
+                        //this list will be pass to search results activity in order to remove times already reserved
                         if (dbStart.equals(selectStart) || dbStart.equals(selectEnd) || (dbStart.after(selectStart)) && dbStart.before(selectEnd)){
                             list.add(new Reservation(room, date, start, end));
                         }
