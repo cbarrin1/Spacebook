@@ -71,6 +71,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_settings:
+                openSettingsDialog();
                 break;
             case R.id.menu_logout:
                 SharedPreferences.Editor editor = MainActivity.sharedpreferences.edit();
@@ -78,8 +79,14 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 editor.apply();
                 Intent intent = new Intent(TabPage.this, MainActivity.class);
                 startActivity(intent);
+                break;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void openSettingsDialog(){
+        settingsDialog settingsDialog = new settingsDialog();
+        settingsDialog.show(getSupportFragmentManager(),"settingsDialog");
     }
 
     protected void onCreate(Bundle savedInstanceState) {
