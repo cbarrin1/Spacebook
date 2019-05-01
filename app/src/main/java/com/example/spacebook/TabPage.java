@@ -1,11 +1,19 @@
 package com.example.spacebook;
 
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,6 +22,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.RadioButton;
 import android.widget.Spinner;
@@ -24,6 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 
 
 import android.widget.Button;
@@ -39,8 +49,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private TextView resList;
     private TextView dateChosen;
 
-    private RadioButton library;
-    private RadioButton stu;
+    private CheckBox library;
+    private CheckBox stu;
 
     private CalendarView calendar;
 
@@ -49,14 +59,27 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private String endTime;
     private Button seeAvailable;
     private Spinner spin;
+    private Spinner spin2;
+
+
+    private NotificationManager mNotificationManager;
+    private NotificationCompat.Builder mBuilder = null;
+    private String textTitle = "Simple Notification Example";
+    private String textContent = "Get back to Application by clicking me";
+    private int SIMPLE_NOTFICATION_ID = 25;
 
     //date format for dateChosen
     SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy");
+    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+    Date rangeStart, rangeEnd, dbStart, dbEnd, spinner;
+    public static final long HOUR = 3600*1000;
 
-    private ArrayList<Reservation> list;
+    ArrayList<Reservation> reservations;
 
     String selectedDate;
     TabHost tabs;
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -112,21 +135,64 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         dateChosen.setText(today);
 
         //radio buttons for location
-        library = findViewById(R.id.radioButton);
-        stu = findViewById(R.id.radioButton2);
+        library = findViewById(R.id.checkBox);
+        stu = findViewById(R.id.checkBox1);
 
-        spin = findViewById(R.id.spinner1);
+        spin = findViewById(R.id.spinner4);
         spin.setOnItemSelectedListener(this);
 
+        spin2 = findViewById(R.id.spinner6);
+        spin2.setOnItemSelectedListener(this);
+
+
+
+        mNotificationManager =
+                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
+
+        //As of API 26 Notification Channels must be assigned to a channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("default",
+                    "Channel foobar",
+                    NotificationManager.IMPORTANCE_HIGH);
+            channel.setDescription("Channel description");
+            channel.setLightColor(Color.GREEN);
+            channel.enableVibration(true);
+            mNotificationManager.createNotificationChannel(channel);
+        }
+        //create intent for action when notification selected
+        //from expanded status bar
+        Intent notifyIntent = new Intent(this, TabPage.class);
+
+        //create pending intent to wrap intent so that it
+        //will fire when notification selected.
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+
+        //set parameter values for Notification
+        mBuilder = new NotificationCompat.Builder(this, "default")
+                .setContentIntent(pendingIntent)
+                .setSmallIcon(R.drawable.droid)
+                .setContentTitle(textTitle)
+                .setContentText(textContent)
+                .setAutoCancel(true)     //cancel Notification after clicking on it
+                //set Android to vibrate when notified
+                .setVibrate(new long[] {1000, 1000, 2000, 2000})
+                //allow heads up notification; otherwise use PRIORITY_DEFAULT
+                .setPriority(NotificationCompat.PRIORITY_HIGH);
+
+
         //button to see results
-        seeAvailable = findViewById(R.id.button7);
+       seeAvailable = findViewById(R.id.button5);
 
         seeAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                mNotificationManager.notify(SIMPLE_NOTFICATION_ID,
+                        mBuilder.build());
                 //query all reservations for selected day
                 try {
-                    list = new ArrayList<>();
                     cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
                     while (cursor.moveToNext()) {
                         String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
@@ -134,28 +200,28 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                         String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
                         String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                        //set up time format
-                        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
                         //convert all time strings to date objects
-                        Date dbStart = format.parse(start);
-                        Date dbEnd = format.parse(end);
-                        Date selectStart = format.parse(startTime);
-                        Date selectEnd = format.parse(endTime);
+                        try {
+                            rangeStart = format.parse(startTime);
+                            rangeEnd = format.parse(endTime);
+                            dbStart = format.parse(start);
+                            dbEnd = format.parse(end);
+                        } catch (Exception e) {e.printStackTrace();}
 
-                        //if there is a reservation between the selected range, it is added to list
-                        //this list will be pass to search results activity in order to remove times already reserved
-                        if (dbStart.equals(selectStart) || dbStart.equals(selectEnd) || (dbStart.after(selectStart)) && dbStart.before(selectEnd)){
-                            list.add(new Reservation(room, date, start, end));
+                        if (dbEnd.after(rangeStart) || dbStart.before(rangeEnd)){
+                            reservations.add(new Reservation(room, date, start, end));
                         }
+
                     }
 
                     // moves to search results page
                     Intent intent = new Intent(TabPage.this, SearchResultPage.class);
                     Bundle args = new Bundle();
-                    args.putSerializable("ARRAYLIST",list);
+                    args.putSerializable("ARRAYLIST",reservations);
                     intent.putExtra("BUNDLE",args);
+                    intent.putExtra("start", startTime);
+                    intent.putExtra("end", endTime);
                     startActivity(intent);
-
 
                 } catch(Exception e) {e.printStackTrace();}
             }
@@ -210,6 +276,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
                 Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
 
+                // sets textview to date chosen on calculator
                 dateChosen.setText((month+1) + "/" + day + "/" + year);
 
                 //cleaning up data to match database format
@@ -226,43 +293,58 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
     }
 
+    int i;
+    String s;
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
+        String ampm;
 
-        //spinner
-        if (item.equals("8:00AM-10:00AM")) {
-            timeChosen = "8:00AM - 10:00AM";
-            startTime = "08:00";
-            endTime = "10:00";
-        } else if (item.equals("10:00AM-12:00PM")) {
-            timeChosen = "10:00AM - 12:00PM";
-            startTime = "10:00";
-            endTime = "12:00";
-        } else if (item.equals("12:00PM-2:00PM")) {
-            timeChosen = "12:00PM - 2:00PM";
-            startTime = "12:00";
-            endTime = "14:00";
-        } else if (item.equals("2:00PM-4:00PM")) {
-            timeChosen = "2:00PM - 4:00PM";
-            startTime = "14:00";
-            endTime = "16:00";
-        } else if (item.equals("4:00PM-6:00PM")) {
-            timeChosen = "4:00PM - 6:00PM";
-            startTime = "16:00";
-            endTime = "18:00";
-        } else if (item.equals("6:00PM-8:00PM")) {
-            timeChosen = "6:00PM - 8:00PM";
-            startTime = "18:00";
-            endTime = "20:00";
-        } else if (item.equals("8:00PM-10:00PM")) {
-            timeChosen = "8:00PM - 10:00PM";
-            startTime = "20:00";
-            endTime = "22:00";
-        } else if (item.equals("10:00PM-12:00AM")) {
-            timeChosen = "10:00PM - 12:00AM";
-            startTime = "22:00";
-            endTime = "24:00";
+        if(parent.getId() == R.id.spinner4)
+        {
+            ampm = item.substring(Math.max(item.length() - 2, 0));
+            if(ampm.equals("PM")){
+
+                s = item.substring(0, item.indexOf("P"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 12){
+                    i += 12;
+                    s = s.substring(s.indexOf(":"));
+                    s = i + s;
+                }
+                startTime = s;
+            }
+            else{
+                s = item.substring(0, item.indexOf("A"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 10){
+                    s = "0" + s;
+                }
+                startTime = s;
+            }
+        }
+        else if(parent.getId() == R.id.spinner6)
+        {
+            ampm = item.substring(Math.max(item.length() - 2, 0));
+            if(ampm.equals("PM")){
+
+                s = item.substring(0, item.indexOf("P"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 12){
+                    i += 12;
+                    s = s.substring(s.indexOf(":"));
+                    s = i + s;
+                }
+                endTime = s;
+            }
+            else{
+                s = item.substring(0, item.indexOf("A"));
+                i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+                if (i < 10){
+                    s = "0" + s;
+                }
+                endTime = s;
+            }
         }
 
     }
