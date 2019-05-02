@@ -1,19 +1,11 @@
 package com.example.spacebook;
 
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Color;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,48 +30,40 @@ import java.util.HashMap;
 
 import android.widget.Button;
 
-public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener {
+public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
 
     //DB objects
     private SQLiteDatabase db;
     private SQLHelper helper;
     private Cursor cursor;
 
-    //User Reservation List
-    private TextView resList;
-    private TextView dateChosen;
-
+    // UI Items
     private CheckBox library;
     private CheckBox stu;
 
     private CalendarView calendar;
 
-    private String timeChosen;
-    private String startTime;
-    private String endTime;
+    private TextView dateChosen;
     private Button seeAvailable;
     private Spinner spin;
     private Spinner spin2;
 
-
-    private NotificationManager mNotificationManager;
-    private NotificationCompat.Builder mBuilder = null;
-    private String textTitle = "Simple Notification Example";
-    private String textContent = "Get back to Application by clicking me";
-    private int SIMPLE_NOTFICATION_ID = 25;
-
-    //date format for dateChosen
+    //setup for dates
     SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy");
     SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-    Date rangeStart, rangeEnd, dbStart, dbEnd, spinner;
-    public static final long HOUR = 3600*1000;
+    SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd");
+    String startTime, endTime, selectedDate;
+    Date rangeStart, rangeEnd, dbStart, dbEnd;
 
-    ArrayList<Reservation> reservations;
+    //list view setup
+    private ListView listView;
+    private ArrayAdapter<String> adapter = null;
+    ArrayList<String> myList = new ArrayList<>();
 
-    String selectedDate;
+    ArrayList<Reservation> reservations = new ArrayList<>();
+
+
     TabHost tabs;
-
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -122,7 +106,12 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         TabHost.TabSpec spec;
 
         //list of user reservations
-        resList = findViewById(R.id.textView);
+        listView = findViewById(R.id.myRes);
+        listView.setOnItemClickListener(this);
+
+        adapter = new ArrayAdapter<String>(this, R.layout.item, myList);
+        listView.setAdapter(adapter);
+
         //calendar
         calendar = findViewById(R.id.calendarView);
 
@@ -133,114 +122,42 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         //setting date display to current date
         String today = df.format(new Date(calendar.getDate()));
         dateChosen.setText(today);
+        // setting todays date as initial string for query
+        selectedDate = tf.format(new Date(calendar.getDate()));
 
         //radio buttons for location
         library = findViewById(R.id.checkBox);
         stu = findViewById(R.id.checkBox1);
-
+        //spinner 1 setup
         spin = findViewById(R.id.spinner4);
         spin.setOnItemSelectedListener(this);
-
+        //spinner 2 setup
         spin2 = findViewById(R.id.spinner6);
         spin2.setOnItemSelectedListener(this);
+        //DB setup
+        helper = new SQLHelper(this);
+        db = helper.getWritableDatabase();
 
 
 
-        mNotificationManager =
-                (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
-
-        //As of API 26 Notification Channels must be assigned to a channel
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("default",
-                    "Channel foobar",
-                    NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("Channel description");
-            channel.setLightColor(Color.GREEN);
-            channel.enableVibration(true);
-            mNotificationManager.createNotificationChannel(channel);
-        }
-        //create intent for action when notification selected
-        //from expanded status bar
-        Intent notifyIntent = new Intent(this, TabPage.class);
-
-        //create pending intent to wrap intent so that it
-        //will fire when notification selected.
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this, 0, notifyIntent, PendingIntent.FLAG_UPDATE_CURRENT);
 
 
-        //set parameter values for Notification
-        mBuilder = new NotificationCompat.Builder(this, "default")
-                .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.droid)
-                .setContentTitle(textTitle)
-                .setContentText(textContent)
-                .setAutoCancel(true)     //cancel Notification after clicking on it
-                //set Android to vibrate when notified
-                .setVibrate(new long[] {1000, 1000, 2000, 2000})
-                //allow heads up notification; otherwise use PRIORITY_DEFAULT
-                .setPriority(NotificationCompat.PRIORITY_HIGH);
 
-
-        //button to see results
-       seeAvailable = findViewById(R.id.button5);
-
-        seeAvailable.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                mNotificationManager.notify(SIMPLE_NOTFICATION_ID,
-                        mBuilder.build());
-                //query all reservations for selected day
-                try {
-                    cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
-                    while (cursor.moveToNext()) {
-                        String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
-                        String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
-                        String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
-                        String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
-
-                        //convert all time strings to date objects
-                        try {
-                            rangeStart = format.parse(startTime);
-                            rangeEnd = format.parse(endTime);
-                            dbStart = format.parse(start);
-                            dbEnd = format.parse(end);
-                        } catch (Exception e) {e.printStackTrace();}
-
-                        if (dbEnd.after(rangeStart) || dbStart.before(rangeEnd)){
-                            reservations.add(new Reservation(room, date, start, end));
-                        }
-
-                    }
-
-                    // moves to search results page
-                    Intent intent = new Intent(TabPage.this, SearchResultPage.class);
-                    Bundle args = new Bundle();
-                    args.putSerializable("ARRAYLIST",reservations);
-                    intent.putExtra("BUNDLE",args);
-                    intent.putExtra("start", startTime);
-                    intent.putExtra("end", endTime);
-                    startActivity(intent);
-
-                } catch(Exception e) {e.printStackTrace();}
-            }
-        });
 
         // TAB 1 ----------------------------------------------------------------------------------------------
         // Initialize a TabSpec for tab1 and add it to the TabHost
-        spec = tabs.newTabSpec("tag1");    //create new tab specification
-        spec.setContent(R.id.My_Reservations);    //add tab view content
-        spec.setIndicator("My Reservations");    //put text on tab
-        tabs.addTab(spec);             //put tab in TabHost container
+        spec = tabs.newTabSpec("tag1");
+        spec.setContent(R.id.My_Reservations);
+        spec.setIndicator("My Reservations");
+        tabs.addTab(spec);
+
+
 
         //grabbing user email
         String user_login = MainActivity.sharedpreferences.getString("LOGIN", null);
 
         //query DB for all reservations under the current username
         try {
-            helper = new SQLHelper(this);
-            db = helper.getWritableDatabase();
             cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{user_login});
             while (cursor.moveToNext()) {
                 String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
@@ -248,15 +165,17 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
                 String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                resList.append("Room: " + room + "   Date: " + date + "   Start Time: " + start + "   End Time: " + end + "\n");
-
+                //date = df.format(new Date (date));
+                System.out.println("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
+                myList.add("Date: " + date + "\nTime: " + start + " - " + end + "\nRoom: " + room);
+                adapter.notifyDataSetChanged();
             }
         } catch (Exception e) {e.printStackTrace();}
 
         // TAB 2 ----------------------------------------------------------------------------------------------
         // Initialize a TabSpec for tab2 and add it to the TabHost
-        spec = tabs.newTabSpec("tag2");        //create new tab specification
-        spec.setContent(R.id.Make_Reservations);            //add view tab content
+        spec = tabs.newTabSpec("tag2");
+        spec.setContent(R.id.Make_Reservations);
         spec.setIndicator("Make Reservations");
         tabs.addTab(spec);
 
@@ -290,6 +209,53 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
             }
         });
 
+        //button to see results
+        seeAvailable = findViewById(R.id.button5);
+        seeAvailable.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //clear arraylist if not empty
+                if (!reservations.isEmpty())
+                    reservations.clear();
+                //query all reservations for selected day
+                try {
+                    cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
+                    while (cursor.moveToNext()) {
+                        String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                        String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                        String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                        String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
+
+                        //convert all time strings to date objects
+                        try {
+                            rangeStart = format.parse(startTime);
+                            rangeEnd = format.parse(endTime);
+                            dbStart = format.parse(start);
+                            dbEnd = format.parse(end);
+                        } catch (Exception e) {e.printStackTrace();}
+
+                        // add reservation to list if it falls within time range
+                        if (dbEnd.after(rangeStart) || dbStart.before(rangeEnd)){
+                            reservations.add(new Reservation(room, date, start, end));
+                        }
+                    }
+
+                    // moves to search results page
+                    Intent intent = new Intent(TabPage.this, SearchResultPage.class);
+                    Bundle args = new Bundle();
+                    args.putSerializable("res",reservations);
+                    intent.putExtra("BUNDLE",args);
+                    //intent.putExtra("start", startTime);
+                    //intent.putExtra("end", endTime);
+                    startActivity(intent);
+                } catch(Exception e) {e.printStackTrace();}
+            }
+        });
+
+
+    }
+
+    public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
 
     }
 

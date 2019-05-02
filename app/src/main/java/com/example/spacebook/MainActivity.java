@@ -104,7 +104,11 @@ public class MainActivity extends AppCompatActivity {
 
 
     }
-
+    @Override
+    protected void onStop(){
+        super.onStop();
+        this.finish();
+    }
     @Override
     protected void onPause() {
         super.onPause();
@@ -116,6 +120,14 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
         if(db != null) {
             db.close();
+        }
+    }
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        if(!db.isOpen()){
+            helper = new SQLHelper(this);
+            db = helper.getWritableDatabase();
         }
     }
 }
