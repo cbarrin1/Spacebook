@@ -204,11 +204,13 @@
                         </TableRow>
 
                             <TableRow>
+
                                 <Button
                                     android:id="@+id/button5"
                                     android:layout_width="73dp"
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
+                                    android:background="@drawable/btn_bg"
                                     android:text="See available rooms" />
                             </TableRow>
                         </TableLayout>

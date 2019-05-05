@@ -83,6 +83,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
             case R.id.menu_logout:
                 SharedPreferences.Editor editor = MainActivity.sharedpreferences.edit();
                 editor.remove("LOGIN");
+                editor.remove("box1");
+                editor.remove("box2");
                 editor.apply();
                 Intent intent = new Intent(TabPage.this, MainActivity.class);
                 startActivity(intent);

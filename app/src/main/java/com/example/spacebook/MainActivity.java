@@ -51,6 +51,8 @@ public class MainActivity extends AppCompatActivity {
         handler.postDelayed(runnable,2500);
 
         sharedpreferences=getApplicationContext().getSharedPreferences("Preferences", 0);
+        sharedpreferences.getBoolean("box1",false);
+        sharedpreferences.getBoolean("box2",false);
         String user_login = sharedpreferences.getString("LOGIN", null);
 
         if (user_login != null) {
