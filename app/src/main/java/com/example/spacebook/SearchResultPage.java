@@ -106,6 +106,8 @@ public class SearchResultPage extends FragmentActivity implements AdapterView.On
                     public void onClick(DialogInterface dialog, int whichButton) {
                         helper.addRes(new Reservation(room, email, date, start, end));
                         //go to email page
+                        Intent goToEmails = new Intent(SearchResultPage.this, EmailConfirmation.class);
+                        startActivity(goToEmails);
                         finish();
                     }
                 });
