@@ -261,16 +261,20 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 try {
                     rangeStart = format.parse(startTime);
                     rangeEnd = format.parse(endTime);
+                    System.out.println(rangeStart);
+                    System.out.println(rangeEnd);
                 } catch (Exception e) {e.printStackTrace();}
 
                 // ensures times selected are valid
                 if (rangeEnd.before(rangeStart) || rangeEnd.equals(rangeStart)) {
                     Toast.makeText(getApplicationContext(), "End Time Must Be After Start Time", Toast.LENGTH_SHORT).show();
+                    System.out.println(rangeEnd + " " + rangeStart);
                 }
                 else if (rangeEnd.getTime() - rangeStart.getTime() > 7200000) {
                     Toast.makeText(getApplicationContext(), "Maximum Reservation Length is 2 Hours", Toast.LENGTH_SHORT).show();
                 }
                 else {
+                    System.out.println(rangeEnd + " " + rangeStart);
                     //query all reservations for selected day
                     if (location.isEmpty()) {
                         try {
@@ -356,13 +360,11 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         v.setSelected(true);
         deleteID = idList.get(position);
     }
-
+    String s, ampm;
     int i;
-    //String s;
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
-        String s, ampm;
 
         if(parent.getId() == R.id.spinner4) {
             ampm = item.substring(Math.max(item.length() - 2, 0));
@@ -374,6 +376,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                     s = s.substring(s.indexOf(":"));
                     startTime = i + s;
                 }
+                else
+                    startTime = s;
             }
             else{
                 s = item.substring(0, item.indexOf("A"));
@@ -381,6 +385,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 if (i < 10){
                     startTime = "0" + s;
                 }
+                else
+                    startTime = s;
             }
         }
         else if(parent.getId() == R.id.spinner6) {
@@ -388,11 +394,14 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
             if(ampm.equals("PM")){
                 s = item.substring(0, item.indexOf("P"));
                 i = Integer.parseInt(s.substring(0, s.indexOf(":")));
+
                 if (i < 12){
                     i += 12;
                     s = s.substring(s.indexOf(":"));
                     endTime = i + s;
                 }
+                else
+                    endTime = s;
             }
             else{
                 s = item.substring(0, item.indexOf("A"));
@@ -400,6 +409,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 if (i < 10){
                     endTime = "0" + s;
                 }
+                else
+                    endTime = s;
             }
         }
     } // end onItemSelected

@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +71,6 @@ public class MainActivity extends AppCompatActivity {
                 validate(username.getText().toString(), password.getText().toString());
             }
         });
-
     }
 
     private void validate (String username, String password) {
@@ -103,6 +101,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Login FAILED",Toast.LENGTH_SHORT).show();
         }
     }
+
     private static String hashMD5(String pass) {
         String generatedPassword = null;
         try {
