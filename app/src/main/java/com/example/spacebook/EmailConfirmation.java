@@ -59,6 +59,7 @@ public class EmailConfirmation extends AppCompatActivity {
     public void doNotSend (View view) {
         Intent intent =new Intent(EmailConfirmation.this, TabPage.class);
         startActivity(intent);
+        finish();
     }
 
 
