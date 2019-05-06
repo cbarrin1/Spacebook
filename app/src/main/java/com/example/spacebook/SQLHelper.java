@@ -30,230 +30,44 @@ public class SQLHelper extends SQLiteOpenHelper {
         db.execSQL(SQLConstants.CREATE_ROOM_TABLE);
         db.execSQL(SQLConstants.CREATE_RES_TABLE);
 
-        // inserting room data
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "001");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "002");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "101");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "NO");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "102");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "103");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "201");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "NO");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "202");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "NO");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "203");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "204");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "205");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "206");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "207");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "208");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "NO");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "209");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "210");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "211");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "212");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "213");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "214");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "215");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "216");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "NO");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "217");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-        values = new ContentValues();
-
-        values.put(SQLConstants.ROOM_NO, "218");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, "219");
-        values.put(SQLConstants.ROOM_LOCATION, "LIBRARY");
-        values.put(SQLConstants.HAS_LCD, "YES");
-        db.insert(SQLConstants.ROOM_TABLE, null, values);
+        // room data
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('001','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('002','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('101','LIBRARY','NO');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('102','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('103','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('201','LIBRARY','NO');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('202','LIBRARY','No');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('203','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('204','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('205','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('206','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('207','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('208','LIBRARY','NO');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('209','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('210','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('211','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('212','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('213','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('214','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('215','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('216','LIBRARY','NO');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('217','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('218','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('219','LIBRARY','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('700','SC','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('701','SC','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('702','SC','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('703','SC','YES');");
+        db.execSQL("INSERT INTO " + SQLConstants.ROOM_TABLE + " (roomNo, location, hasLCD) VALUES ('704','SC','YES');");
 
         // test users
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
-        values.put(SQLConstants.USER_PASS, "password123");
-        db.insert(SQLConstants.USER_TABLE, null, values);
+        db.execSQL("INSERT INTO " + SQLConstants.USER_TABLE + " (email, password, fname, lname) VALUES ('test@bentley.edu','482c811da5d5b4bc6d497ffa98491e38','Joe','Smith');");
+        db.execSQL("INSERT INTO " + SQLConstants.USER_TABLE + " (email, password, fname, lname) VALUES ('admin@bentley.edu','7bf0e433abdcc805e5b1fb29898caaf9','John','Doe');");
+        db.execSQL("INSERT INTO " + SQLConstants.USER_TABLE + " (email, password, fname, lname) VALUES ('android@bentley.edu','482c811da5d5b4bc6d497ffa98491e38','Jane','Doe');");
 
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "admin@bentley.edu");
-        values.put(SQLConstants.USER_PASS, "12345");
-        db.insert(SQLConstants.USER_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "android@bentley.edu");
-        values.put(SQLConstants.USER_PASS, "testing");
-        db.insert(SQLConstants.USER_TABLE, null, values);
-
-        //test reservations
+        // test reservations
         db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (email, roomNo, date, start, endTime) VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
-
-        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
-                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
-
-        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
-                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
-
-        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
-                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
-
-        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
-                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
-
-/*
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
-        values.put(SQLConstants.ROOM_NO, "001");
-        values.put(SQLConstants.DATE, "2019-04-01");
-        values.put(SQLConstants.TIME_START, "08:00");
-        values.put(SQLConstants.TIME_END, "08:30");
-        db.insert(SQLConstants.RES_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
-        values.put(SQLConstants.ROOM_NO, "219");
-        values.put(SQLConstants.DATE, "2019-04-01");
-        values.put(SQLConstants.TIME_START, "09:00");
-        values.put(SQLConstants.TIME_END, "09:30");
-        db.insert(SQLConstants.RES_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
-        values.put(SQLConstants.ROOM_NO, "002");
-        values.put(SQLConstants.DATE, "2019-04-01");
-        values.put(SQLConstants.TIME_START, "08:00");
-        values.put(SQLConstants.TIME_END, "09:30");
-        db.insert(SQLConstants.RES_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
-        values.put(SQLConstants.ROOM_NO, "201");
-        values.put(SQLConstants.DATE, "2019-04-01");
-        values.put(SQLConstants.TIME_START, "08:00");
-        values.put(SQLConstants.TIME_END, "09:30");
-        db.insert(SQLConstants.RES_TABLE, null, values);
-
-        values = new ContentValues();
-        values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
-        values.put(SQLConstants.ROOM_NO, "212");
-        values.put(SQLConstants.DATE, "2019-04-01");
-        values.put(SQLConstants.TIME_START, "08:00");
-        values.put(SQLConstants.TIME_END, "09:30");
-        db.insert(SQLConstants.RES_TABLE, null, values);
-*/
-
-
-
-
-
-
-
 
 
     }

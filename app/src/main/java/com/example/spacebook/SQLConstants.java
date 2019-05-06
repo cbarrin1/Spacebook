@@ -14,9 +14,11 @@ public class SQLConstants {
     public static final String USER_ID = "user_id";
     public static final String USER_EMAIL = "email";
     public static final String USER_PASS = "password";
+    public static final String FIRST_NAME = "fname";
+    public static final String LAST_NAME = "lname";
     public static final String CREATE_USER_TABLE = "CREATE TABLE " + USER_TABLE + " (" + USER_ID + KEY_ID + "," +
-                                                    USER_EMAIL + " text," + USER_PASS + " text);";
-    // USERS TABLE: user_id, email, password
+                                                    USER_EMAIL + " text," + USER_PASS + " text," + FIRST_NAME + " text," + LAST_NAME +  " text);";
+    // USERS TABLE: user_id, email, password, fname, lname
 
     // ROOMS table
     public static final String ROOM_TABLE = "rooms";
@@ -34,8 +36,10 @@ public class SQLConstants {
     public static final String DATE = "date";
     public static final String TIME_START = "start";
     public static final String TIME_END = "endTime";
-    public static final String CREATE_RES_TABLE = "CREATE TABLE " + RES_TABLE + " (" + RES_ID + KEY_ID + "," +
+    public static final String CREATE_RES_TABLE = "CREATE TABLE " + RES_TABLE + " (" + RES_ID + KEY_ID + "," + ROOM_ID + " text," +
                                                     USER_EMAIL + " text," + ROOM_NO + " text," + DATE + " text," + TIME_START + " text," +
-                                                    TIME_END + " text);";
+                                                    TIME_END + " text, CONSTRAINT fk_rooms" +
+                                                    " FOREIGN KEY (room_id)\n" +
+                                                    " REFERENCES rooms(room_id)) ;";
     // RESERVATIONS TABLE: res_id, email, roomNo, date, start, end
 }

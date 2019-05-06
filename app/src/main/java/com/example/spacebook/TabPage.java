@@ -1,6 +1,5 @@
 package com.example.spacebook;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -19,7 +18,6 @@ import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
 import android.widget.CheckBox;
 import android.widget.ListView;
-import android.widget.RadioButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.TabHost;
@@ -28,9 +26,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
-
-
 import android.widget.Button;
 
 public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
@@ -43,11 +38,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     // UI Items
     private CheckBox library;
     private CheckBox stu;
-
     private CalendarView calendar;
-
     private Button delete;
-    int deleteID;
     private TextView dateChosen;
     private Button seeAvailable;
     private Spinner spin;
@@ -65,8 +57,10 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private ArrayAdapter<String> adapter = null;
     ArrayList<String> myList = new ArrayList<>();
     ArrayList<Integer> idList = new ArrayList<>();
-
     ArrayList<Reservation> reservations = new ArrayList<>();
+    private ArrayList<String> roomList = new ArrayList<>();
+    String searchAgain;
+    int deleteID;
 
     TabHost tabs;
 
@@ -112,47 +106,25 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         tabs.setup();
         TabHost.TabSpec spec;
 
-        //list of user reservations
-        listView = findViewById(R.id.myRes);
-        listView.setOnItemClickListener(this);
-
-        adapter = new ArrayAdapter<String>(this, R.layout.item, myList);
-        listView.setAdapter(adapter);
-
-        //calendar
-        calendar = findViewById(R.id.calendarView);
-
-        //displays date chosen
-        dateChosen = findViewById(R.id.textView9);
-        //dateChosen.setText("(choose a date on calendar)");
-
-        //setting date display to current date
-        String today = df.format(new Date(calendar.getDate()));
-        dateChosen.setText(today);
-        // setting todays date as initial string for query
-        selectedDate = tf.format(new Date(calendar.getDate()));
-
-        //radio buttons for location
-        library = findViewById(R.id.checkBox);
-        stu = findViewById(R.id.checkBox1);
-        //spinner 1 setup
-        spin = findViewById(R.id.spinner4);
-        spin.setOnItemSelectedListener(this);
-        //spinner 2 setup
-        spin2 = findViewById(R.id.spinner6);
-        spin2.setOnItemSelectedListener(this);
         //DB setup
         helper = new SQLHelper(this);
         db = helper.getWritableDatabase();
 
-        // TAB 1 ----------------------------------------------------------------------------------------------
+// TAB 1 ------------------------------------------------------------------------------------------------------------------------------------------
         // Initialize a TabSpec for tab1 and add it to the TabHost
         spec = tabs.newTabSpec("tag1");
         spec.setContent(R.id.My_Reservations);
         spec.setIndicator("My Reservations");
         tabs.addTab(spec);
 
+        //list of user reservations
+        listView = findViewById(R.id.myRes);
+        listView.setOnItemClickListener(this);
+        adapter = new ArrayAdapter<String>(this, R.layout.item, myList);
+        listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
+
+        // cancel reservation button
         delete = findViewById(R.id.button);
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,7 +132,6 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 System.out.println("pressed");
 
                     AlertDialog dialog = new AlertDialog.Builder(TabPage.this).create();
-
                     //set message, title, and icon
                     dialog.setTitle("Room Reservation");
                     dialog.setMessage("Confirm Cancel Reservation");
@@ -169,6 +140,21 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                     dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int whichButton) {
                             helper.deleteRes(deleteID);
+                            myList.clear();
+                            try {
+                                cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{searchAgain});
+                                while (cursor.moveToNext()) {
+                                    int id = cursor.getInt(cursor.getColumnIndex("res_id"));
+                                    String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                                    String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                                    String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                                    String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
+
+                                    idList.add(id);
+                                    myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
+                                    adapter.notifyDataSetChanged();
+                                }
+                            } catch (Exception e) {e.printStackTrace();}
                         }
                     });
 
@@ -177,16 +163,13 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                             //does not do anything
                         }
                     });
-
                     dialog.show();
-
-          }
-      });
+            }});
 
         //grabbing user email
         final String user_login = MainActivity.sharedpreferences.getString("LOGIN", null);
+        searchAgain = user_login;
 
-        //query DB for all reservations under the current username
         try {
             cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{user_login});
             while (cursor.moveToNext()) {
@@ -202,54 +185,77 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
             }
         } catch (Exception e) {e.printStackTrace();}
 
-        // TAB 2 ----------------------------------------------------------------------------------------------
+// TAB 2 ------------------------------------------------------------------------------------------------------------------------------------------
         // Initialize a TabSpec for tab2 and add it to the TabHost
         spec = tabs.newTabSpec("tag2");
         spec.setContent(R.id.Make_Reservations);
         spec.setIndicator("Make Reservations");
         tabs.addTab(spec);
 
+        //calendar
+        calendar = findViewById(R.id.calendarView);
+        //displays date chosen
+        dateChosen = findViewById(R.id.textView9);
+        //setting date display to current date
+        dateChosen.setText(df.format(new Date(calendar.getDate())));
+        // setting today's date as string for db query
+        selectedDate = tf.format(new Date(calendar.getDate()));
+
+        //check boxes for location
+        library = findViewById(R.id.checkBox);
+        stu = findViewById(R.id.checkBox1);
+        //set listeners for tab1
+        library.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v){
+            }
+        });
+        stu.setOnClickListener( new View.OnClickListener() {
+            public void onClick(View v){
+            }
+        });
+
+        //spinner 1 setup
+        spin = findViewById(R.id.spinner4);
+        spin.setOnItemSelectedListener(this);
+        //spinner 2 setup
+        spin2 = findViewById(R.id.spinner6);
+        spin2.setOnItemSelectedListener(this);
+
         //listener for changing date on calendar
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
-                //creating new strings for formatting purposes
-                String newDay, newMonth;
-                //setting up calendar
+                // setting up calendar
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, dayOfMonth);
-                //saving date attributes
-                int day = cal.get(Calendar.DAY_OF_MONTH);
-                int yr = cal.get(Calendar.YEAR);
-                int mth = cal.get(Calendar.MONTH);
 
-                Toast.makeText(getApplicationContext(), String.valueOf(dayOfMonth), Toast.LENGTH_SHORT).show();
-
-                // sets textview to date chosen on calculator
-                dateChosen.setText((month+1) + "/" + day + "/" + year);
-
-                //cleaning up data to match database format
-                mth++;
-                newDay = String.format("%02d", day);
-                newMonth = String.format("%02d", mth);
-
-                //saving date string for DB query
-                selectedDate = yr + "-" + newMonth + "-" + newDay;
-
+                // set textview to date chosen on calendar
+                dateChosen.setText((month+1) + "/" + dayOfMonth + "/" + year);
+                // formatting data to fit with db
+                String newDay = String.format("%02d", dayOfMonth);
+                String newMonth = String.format("%02d", month+1);
+                // saving date string for DB query
+                selectedDate = year + "-" + newMonth + "-" + newDay;
             }
         });
 
-        //button to see results
+        // button to see results
         seeAvailable = findViewById(R.id.button5);
         seeAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //query DB for all reservations under the current username
+                String location = "";
+                if (library.isChecked() && !stu.isChecked()) {
+                    location = "LIBRARY";
+                }
+                else if (!library.isChecked() && stu.isChecked()) {
+                    location = "SC";
+                }
 
-                System.out.println(startTime);
-                System.out.println(endTime);
-
-                //clear arraylist if not empty
+                //clear arraylist holding reservations
                 reservations.clear();
+                roomList.clear();
 
                 //convert time strings into dates
                 try {
@@ -266,123 +272,203 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 }
                 else {
                     //query all reservations for selected day
-                    try {
-                        cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
-                        while (cursor.moveToNext()) {
-                            String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
-                            String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
-                            String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
-                            String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
+                    if (location.isEmpty()) {
+                        try {
+                            cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
+                            while (cursor.moveToNext()) {
+                                String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                                String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                                String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                                String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                            //convert all time strings to date objects
-                            try {
-                                dbStart = format.parse(start);
-                                dbEnd = format.parse(end);
-                            } catch (Exception e) {e.printStackTrace();}
+                                //convert all time strings to date objects
+                                try {
+                                    dbStart = format.parse(start);
+                                    dbEnd = format.parse(end);
+                                } catch (Exception e) {e.printStackTrace();}
 
-                            // add reservation to list if it falls within time range
-                            if (dbEnd.after(rangeStart) || ( dbStart.after(rangeStart) && dbStart.before(rangeEnd))) {
-                                reservations.add(new Reservation(room, date, start, end));
-                                System.out.println(room + " start " + start + " end " + end);
+                                // add reservation to list if it falls within time range
+                                if (dbEnd.after(rangeStart) || (dbStart.after(rangeStart) && dbStart.before(rangeEnd))) {
+                                    reservations.add(new Reservation(room, date, start, end));
+                                }
                             }
-                        }
+                        } catch (Exception e) {e.printStackTrace();}
+                        // retrieves list of all rooms
+                        try {
+                            cursor = db.rawQuery("SELECT * FROM ROOMS", null);
+                            while (cursor.moveToNext()) {
+                                String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                                roomList.add(room);
+                            }
+                        } catch(Exception e) {e.printStackTrace();}
+                    } else {
+                        try {
+                            cursor = db.rawQuery("SELECT * FROM RESERVATIONS INNER JOIN ROOMS ON RESERVATIONS.room_id = ROOMS.room_id WHERE date =? AND location =?", new String[]{selectedDate, location});
+                            while (cursor.moveToNext()) {
+                                String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                                String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                                String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                                String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                        // moves to search results page
-                        Intent intent = new Intent(TabPage.this, SearchResultPage.class);
-                        // creates bundle to pass arraylist
-                        Bundle args = new Bundle();
-                        args.putSerializable("res",reservations);
-                        intent.putExtra("BUNDLE",args);
-                        intent.putExtra("email", user_login);
-                        intent.putExtra("date", selectedDate);
-                        intent.putExtra("start", startTime);
-                        intent.putExtra("end", endTime);
-                        // starts next intent
-                        startActivity(intent);
-                    } catch(Exception e) {e.printStackTrace();}
+                                //convert all time strings to date objects
+                                try {
+                                    dbStart = format.parse(start);
+                                    dbEnd = format.parse(end);
+                                } catch (Exception e) {e.printStackTrace();}
+
+                                // add reservation to list if it falls within time range
+                                if (dbEnd.after(rangeStart) || (dbStart.after(rangeStart) && dbStart.before(rangeEnd))) {
+                                    reservations.add(new Reservation(room, date, start, end));
+                                }
+                            }
+                        } catch (Exception e) {e.printStackTrace();}
+                        // retrieves list of selected rooms
+                        try {
+                            cursor = db.rawQuery("SELECT * FROM ROOMS WHERE location =?", new String[]{location});
+                            while (cursor.moveToNext()) {
+                                String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                                roomList.add(room);
+                            }
+                        } catch(Exception e) {e.printStackTrace();}
+                    }
+
+                    // moves to search results page
+                    Intent intent = new Intent(TabPage.this, SearchResultPage.class);
+                    // creates bundle to pass arraylist
+                    Bundle args = new Bundle();
+                    args.putSerializable("res",reservations);
+                    intent.putExtra("BUNDLE",args);
+                    Bundle args2 = new Bundle();
+                    args2.putSerializable("room",roomList);
+                    intent.putExtra("rooms",args2);
+                    intent.putExtra("email", user_login);
+                    intent.putExtra("date", selectedDate);
+                    intent.putExtra("start", startTime);
+                    intent.putExtra("end", endTime);
+                    // starts next intent
+                    startActivity(intent);
                 }
             } // closes OnClick
         }); // closes OnClickListener
-
-
     } // closes OnCreate
 
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         v.setSelected(true);
         deleteID = idList.get(position);
-
     }
 
     int i;
-    String s;
+    //String s;
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         // On selecting a spinner item
         String item = parent.getItemAtPosition(position).toString();
-        String ampm;
+        String s, ampm;
 
-        if(parent.getId() == R.id.spinner4)
-        {
+        if(parent.getId() == R.id.spinner4) {
             ampm = item.substring(Math.max(item.length() - 2, 0));
             if(ampm.equals("PM")){
-
                 s = item.substring(0, item.indexOf("P"));
                 i = Integer.parseInt(s.substring(0, s.indexOf(":")));
                 if (i < 12){
                     i += 12;
                     s = s.substring(s.indexOf(":"));
-                    s = i + s;
+                    startTime = i + s;
                 }
-                startTime = s;
             }
             else{
                 s = item.substring(0, item.indexOf("A"));
                 i = Integer.parseInt(s.substring(0, s.indexOf(":")));
                 if (i < 10){
-                    s = "0" + s;
+                    startTime = "0" + s;
                 }
-                startTime = s;
             }
         }
-        else if(parent.getId() == R.id.spinner6)
-        {
+        else if(parent.getId() == R.id.spinner6) {
             ampm = item.substring(Math.max(item.length() - 2, 0));
             if(ampm.equals("PM")){
-
                 s = item.substring(0, item.indexOf("P"));
                 i = Integer.parseInt(s.substring(0, s.indexOf(":")));
                 if (i < 12){
                     i += 12;
                     s = s.substring(s.indexOf(":"));
-                    s = i + s;
+                    endTime = i + s;
                 }
-                endTime = s;
             }
             else{
                 s = item.substring(0, item.indexOf("A"));
                 i = Integer.parseInt(s.substring(0, s.indexOf(":")));
                 if (i < 10){
-                    s = "0" + s;
+                    endTime = "0" + s;
                 }
-                endTime = s;
             }
         }
-
-    }
-    @Override
-    protected void onResume(){
-        super.onResume();
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
-    protected void onRestart(){
-        super.onRestart();
-        adapter.notifyDataSetChanged();
-    }
+    } // end onItemSelected
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
 
+    @Override
+    protected void onResume(){
+        super.onResume();
+        helper = new SQLHelper(this);
+        db = helper.getWritableDatabase();
+        myList.clear();
+        try {
+            cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{searchAgain});
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("res_id"));
+                String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
+
+                idList.add(id);
+                myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
+                adapter.notifyDataSetChanged();
+            }
+        } catch (Exception e) {e.printStackTrace();}
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        helper = new SQLHelper(this);
+        db = helper.getWritableDatabase();
+        myList.clear();
+        try {
+            cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{searchAgain});
+            while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("res_id"));
+                String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
+
+                idList.add(id);
+                myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
+                adapter.notifyDataSetChanged();
+            }
+        } catch (Exception e) {e.printStackTrace();}
+    }
+    @Override
+    protected void onStop(){
+        super.onStop();
+        if(db != null)
+            db.close();
+    }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(db != null)
+            db.close();
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(db != null) {
+            db.close();
+        }
+    }
 }
