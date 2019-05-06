@@ -6,7 +6,7 @@ public class SQLConstants {
 
     public static final String DATABASE_NAME = "spacebook.db";
     public static final int DATABASE_VERSION = 1;
-    public static final String KEY_ID = " integer primary key autoincrement";
+    public static final String KEY_ID = " integer primary key autoincrement not null";
     SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     // USERS table
@@ -33,7 +33,7 @@ public class SQLConstants {
     public static final String RES_ID = "res_id";
     public static final String DATE = "date";
     public static final String TIME_START = "start";
-    public static final String TIME_END = "end";
+    public static final String TIME_END = "endTime";
     public static final String CREATE_RES_TABLE = "CREATE TABLE " + RES_TABLE + " (" + RES_ID + KEY_ID + "," +
                                                     USER_EMAIL + " text," + ROOM_NO + " text," + DATE + " text," + TIME_START + " text," +
                                                     TIME_END + " text);";

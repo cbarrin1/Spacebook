@@ -192,6 +192,21 @@ public class SQLHelper extends SQLiteOpenHelper {
         db.insert(SQLConstants.USER_TABLE, null, values);
 
         //test reservations
+        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (email, roomNo, date, start, endTime) VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
+
+        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
+                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
+
+        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
+                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
+
+        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
+                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
+
+        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
+                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('test@bentley.edu','001','2019-04-01','08:00','08:30');");
+
+/*
         values = new ContentValues();
         values.put(SQLConstants.USER_EMAIL, "test@bentley.edu");
         values.put(SQLConstants.ROOM_NO, "001");
@@ -231,7 +246,7 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.TIME_START, "08:00");
         values.put(SQLConstants.TIME_END, "09:30");
         db.insert(SQLConstants.RES_TABLE, null, values);
-
+*/
 
 
 
@@ -249,7 +264,7 @@ public class SQLHelper extends SQLiteOpenHelper {
 
         if (oldVersion >= newVersion) return;
 
-        Log.d("SQLiteDemo", "onUpgrade: Version = " + newVersion);
+        Log.d("Spacebook", "onUpgrade: Version = " + newVersion);
         db.execSQL("DROP TABLE IF EXISTS " + SQLConstants.USER_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SQLConstants.ROOM_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + SQLConstants.RES_TABLE);
@@ -263,20 +278,24 @@ public class SQLHelper extends SQLiteOpenHelper {
         values.put(SQLConstants.USER_EMAIL, user.getUser());
         values.put(SQLConstants.USER_PASS, user.getPass());
         db.insert(SQLConstants.USER_TABLE, null, values);
-        Log.d("SQLiteDemo", user.getUser() + " added");
+        Log.d("Spacebook", user.getUser() + " added");
     }
 
     //method for adding reservation
     public void addRes(Reservation r){
         SQLiteDatabase db = this.getWritableDatabase();
-        values = new ContentValues();
-        values.put(SQLConstants.ROOM_NO, r.getRoomNo());
-        values.put(SQLConstants.USER_EMAIL, r.getUser_email());
-        values.put(SQLConstants.DATE, r.getDate());
-        values.put(SQLConstants.TIME_START, r.getStart());
-        values.put(SQLConstants.TIME_END, r.getEnd());
-        db.insert(SQLConstants.RES_TABLE, null, values);
-        Log.d("SQLiteDemo", r.getRes_id() + " added");
+        db.execSQL("INSERT INTO " + SQLConstants.RES_TABLE + " (" + SQLConstants.USER_EMAIL + "," + SQLConstants.ROOM_NO + "," + SQLConstants.DATE +
+                "," + SQLConstants.TIME_START + "," + SQLConstants.TIME_END + ") VALUES ('" + r.getUser_email() + "','" + r.getRoomNo() + "','" +
+                r.getDate() + "','" + r.getStart() + "','" + r.getEnd() + "');");
+        Log.d("Spacebook", r.getRes_id() + " added");
+    }
+
+
+    public void deleteRes(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(SQLConstants.RES_TABLE, "res_id =?",new String[]{Integer.toString(id)});
+
+        Log.d("Spacebook", "item deleted");
     }
 
     //method for getting all users in DB

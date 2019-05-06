@@ -4,13 +4,46 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/gradient_bg"
-    android:fontFamily = "sans-serif-medium" >
+    android:fontFamily = "sans-serif-medium"
+    android:weightSum="10">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select a room"/>
 
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily = "sans-serif-medium" >
+        android:fontFamily = "sans-serif-medium"
+        android:layout_weight="1">
     </ListView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_weight="9">
+
+            <Button
+                android:id="@+id/reserve"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_bg"
+                android:layout_weight="1"
+                android:text="Reserve Room"/>
+
+            <Button
+                android:id="@+id/cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/btn_bg"
+                android:layout_weight="1"
+                android:text="Cancel"/>
+
+
+        </LinearLayout>
+
 
 </LinearLayout>

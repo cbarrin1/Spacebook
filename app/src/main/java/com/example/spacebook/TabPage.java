@@ -1,5 +1,8 @@
 package com.example.spacebook;
 
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.Cursor;
@@ -43,6 +46,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
 
     private CalendarView calendar;
 
+    private Button delete;
+    int deleteID;
     private TextView dateChosen;
     private Button seeAvailable;
     private Spinner spin;
@@ -59,9 +64,9 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private ListView listView;
     private ArrayAdapter<String> adapter = null;
     ArrayList<String> myList = new ArrayList<>();
+    ArrayList<Integer> idList = new ArrayList<>();
 
     ArrayList<Reservation> reservations = new ArrayList<>();
-
 
     TabHost tabs;
 
@@ -140,12 +145,6 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         helper = new SQLHelper(this);
         db = helper.getWritableDatabase();
 
-
-
-
-
-
-
         // TAB 1 ----------------------------------------------------------------------------------------------
         // Initialize a TabSpec for tab1 and add it to the TabHost
         spec = tabs.newTabSpec("tag1");
@@ -153,23 +152,53 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         spec.setIndicator("My Reservations");
         tabs.addTab(spec);
 
+        adapter.notifyDataSetChanged();
+        delete = findViewById(R.id.button);
+        delete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                System.out.println("pressed");
 
+                    AlertDialog dialog = new AlertDialog.Builder(TabPage.this).create();
+
+                    //set message, title, and icon
+                    dialog.setTitle("Room Reservation");
+                    dialog.setMessage("Confirm Cancel Reservation");
+
+                    //set three option buttons
+                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            helper.deleteRes(deleteID);
+                        }
+                    });
+
+                    dialog.setButton(DialogInterface.BUTTON_NEGATIVE, "Cancel", new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            //does not do anything
+                        }
+                    });
+
+
+
+
+          }
+      });
 
         //grabbing user email
-        String user_login = MainActivity.sharedpreferences.getString("LOGIN", null);
+        final String user_login = MainActivity.sharedpreferences.getString("LOGIN", null);
 
         //query DB for all reservations under the current username
         try {
             cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{user_login});
             while (cursor.moveToNext()) {
+                int id = cursor.getInt(cursor.getColumnIndex("res_id"));
                 String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
                 String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
                 String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
                 String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                //date = df.format(new Date (date));
-                System.out.println("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
-                myList.add("Date: " + date + "\nTime: " + start + " - " + end + "\nRoom: " + room);
+                idList.add(id);
+                myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
                 adapter.notifyDataSetChanged();
             }
         } catch (Exception e) {e.printStackTrace();}
@@ -216,48 +245,72 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         seeAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+                System.out.println(startTime);
+                System.out.println(endTime);
+
                 //clear arraylist if not empty
-                if (!reservations.isEmpty())
-                    reservations.clear();
-                //query all reservations for selected day
+                reservations.clear();
+
+                //convert time strings into dates
                 try {
-                    cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
-                    while (cursor.moveToNext()) {
-                        String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
-                        String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
-                        String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
-                        String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
+                    rangeStart = format.parse(startTime);
+                    rangeEnd = format.parse(endTime);
+                } catch (Exception e) {e.printStackTrace();}
 
-                        //convert all time strings to date objects
-                        try {
-                            rangeStart = format.parse(startTime);
-                            rangeEnd = format.parse(endTime);
-                            dbStart = format.parse(start);
-                            dbEnd = format.parse(end);
-                        } catch (Exception e) {e.printStackTrace();}
+                // ensures times selected are valid
+                if (rangeEnd.before(rangeStart) || rangeEnd.equals(rangeStart)) {
+                    Toast.makeText(getApplicationContext(), "End Time Must Be After Start Time", Toast.LENGTH_SHORT).show();
+                }
+                else if (rangeEnd.getTime() - rangeStart.getTime() > 7200000) {
+                    Toast.makeText(getApplicationContext(), "Maximum Reservation Length is 2 Hours", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    //query all reservations for selected day
+                    try {
+                        cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE date = ?", new String[]{selectedDate});
+                        while (cursor.moveToNext()) {
+                            String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                            String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                            String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                            String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                        // add reservation to list if it falls within time range
-                        if (dbEnd.after(rangeStart) || dbStart.before(rangeEnd)){
-                            reservations.add(new Reservation(room, date, start, end));
+                            //convert all time strings to date objects
+                            try {
+                                dbStart = format.parse(start);
+                                dbEnd = format.parse(end);
+                            } catch (Exception e) {e.printStackTrace();}
+
+                            // add reservation to list if it falls within time range
+                            if (dbEnd.after(rangeStart) || ( dbStart.after(rangeStart) && dbStart.before(rangeEnd))) {
+                                reservations.add(new Reservation(room, date, start, end));
+                                System.out.println(room + " start " + start + " end " + end);
+                            }
                         }
-                    }
 
-                    // moves to search results page
-                    Intent intent = new Intent(TabPage.this, SearchResultPage.class);
-                    Bundle args = new Bundle();
-                    args.putSerializable("res",reservations);
-                    intent.putExtra("BUNDLE",args);
-                    //intent.putExtra("start", startTime);
-                    //intent.putExtra("end", endTime);
-                    startActivity(intent);
-                } catch(Exception e) {e.printStackTrace();}
-            }
-        });
+                        // moves to search results page
+                        Intent intent = new Intent(TabPage.this, SearchResultPage.class);
+                        // creates bundle to pass arraylist
+                        Bundle args = new Bundle();
+                        args.putSerializable("res",reservations);
+                        intent.putExtra("BUNDLE",args);
+                        intent.putExtra("email", user_login);
+                        intent.putExtra("date", selectedDate);
+                        intent.putExtra("start", startTime);
+                        intent.putExtra("end", endTime);
+                        // starts next intent
+                        startActivity(intent);
+                    } catch(Exception e) {e.printStackTrace();}
+                }
+            } // closes OnClick
+        }); // closes OnClickListener
 
 
-    }
+    } // closes OnCreate
 
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+        v.setSelected(true);
+        deleteID = idList.get(position);
 
     }
 
@@ -316,9 +369,21 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         }
 
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+        adapter.notifyDataSetChanged();
+    }
 
     @Override
     public void onNothingSelected(AdapterView<?> parent) {
 
     }
+
 }
