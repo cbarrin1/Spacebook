@@ -7,6 +7,9 @@
     <string name="logout">Log out</string>
 
     <string name="prompt">Choose time</string>
+    <string name="no_thanks">No thanks</string>
+    <string name="send">Send</string>
+    <string name="send_reminder_to_others">Send reminder to others:</string>
 
     <string-array name="start_times">
         <item>8:00AM</item>

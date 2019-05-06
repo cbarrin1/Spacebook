@@ -23,14 +23,14 @@ public class SearchResultPage extends FragmentActivity implements AdapterView.On
     private Cursor cursor;
 
     //list view setup
-    private ListView list;
-    private ArrayAdapter<String> adapter = null;
+    ListView list;
+    ArrayAdapter<String> adapter = null;
 
     private ArrayList<Reservation> reservations = new ArrayList<>();
     private ArrayList<String> roomList = new ArrayList<>();
 
-    private Button reserve;
-    private Button cancel;
+    Button reserve;
+    Button cancel;
 
     String room, email, date, start, end;
     int roomID;
@@ -54,7 +54,9 @@ public class SearchResultPage extends FragmentActivity implements AdapterView.On
         Bundle args2 = intent.getBundleExtra("rooms");
         roomList = (ArrayList<String>) args2.getSerializable("room");
         // set up array adapter
-        adapter = new ArrayAdapter<String>(this, R.layout.item, roomList);
+        if (roomList != null){
+            adapter = new ArrayAdapter<>(this, R.layout.item, roomList);
+        }
         list.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 

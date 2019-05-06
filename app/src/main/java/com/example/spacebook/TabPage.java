@@ -7,7 +7,7 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -26,6 +26,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import android.widget.Button;
 
 public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
@@ -38,22 +39,22 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     // UI Items
     private CheckBox library;
     private CheckBox stu;
-    private CalendarView calendar;
-    private Button delete;
     private TextView dateChosen;
-    private Button seeAvailable;
-    private Spinner spin;
-    private Spinner spin2;
+    CalendarView calendar;
+    Button delete;
+    Button seeAvailable;
+    Spinner spin;
+    Spinner spin2;
 
     //setup for dates
-    SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy");
-    SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-    SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd");
+    SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy", Locale.US);
+    SimpleDateFormat format = new SimpleDateFormat("HH:mm", Locale.US);
+    SimpleDateFormat tf = new SimpleDateFormat("yyyy-MM-dd", Locale.US);
     String startTime, endTime, selectedDate;
     Date rangeStart, rangeEnd, dbStart, dbEnd;
 
     //list view setup
-    private ListView listView;
+    ListView listView;
     private ArrayAdapter<String> adapter = null;
     ArrayList<String> myList = new ArrayList<>();
     ArrayList<Integer> idList = new ArrayList<>();
@@ -120,7 +121,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         //list of user reservations
         listView = findViewById(R.id.myRes);
         listView.setOnItemClickListener(this);
-        adapter = new ArrayAdapter<String>(this, R.layout.item, myList);
+        adapter = new ArrayAdapter<>(this, R.layout.item, myList);
         listView.setAdapter(adapter);
         adapter.notifyDataSetChanged();
 
@@ -224,18 +225,20 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         //listener for changing date on calendar
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
-            public void onSelectedDayChange(CalendarView view, int year, int month, int dayOfMonth) {
+            public void onSelectedDayChange(@NonNull CalendarView view, int year, int month, int dayOfMonth) {
                 // setting up calendar
                 Calendar cal = Calendar.getInstance();
                 cal.set(year, month, dayOfMonth);
+                int newMonth = month + 1;
 
                 // set textview to date chosen on calendar
-                dateChosen.setText((month+1) + "/" + dayOfMonth + "/" + year);
+                String selection = (month+1) + "/" + dayOfMonth + "/" + year;
+                dateChosen.setText(selection);
                 // formatting data to fit with db
-                String newDay = String.format("%02d", dayOfMonth);
-                String newMonth = String.format("%02d", month+1);
+                String dayString = String.format(Locale.US,"%02d", dayOfMonth);
+                String monthString = String.format(Locale.US, "%02d", newMonth);
                 // saving date string for DB query
-                selectedDate = year + "-" + newMonth + "-" + newDay;
+                selectedDate = year + "-" + monthString + "-" + dayString;
             }
         });
 
