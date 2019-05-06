@@ -16,6 +16,7 @@ public class EmailConfirmation extends AppCompatActivity {
 
     // list for emails
     List<EditText> emails;
+    Reservation r;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -29,6 +30,9 @@ public class EmailConfirmation extends AppCompatActivity {
         emails.add((EditText) findViewById(R.id.email4));
         emails.add((EditText) findViewById(R.id.email5));
 
+        Intent intent = getIntent();
+        Bundle args = intent.getBundleExtra("reservation");
+        r = (Reservation) args.getSerializable("res");
 
     }
     // Sends emails when button is clicked
@@ -45,7 +49,8 @@ public class EmailConfirmation extends AppCompatActivity {
         // opens gmail and parses recipients addresses, subject and text
         Intent intent = new Intent(Intent.ACTION_SENDTO,Uri.parse("mailto:" +fullRecepients));
         intent.putExtra(Intent.EXTRA_SUBJECT, "Study room reservation");
-        intent.putExtra(Intent.EXTRA_TEXT, "You have reserved a room");
+        intent.putExtra(Intent.EXTRA_TEXT, "You have reserved a room. \nDate: " + r.getDate() + "\nRoom: " + r.getRoomNo() + "\nStart Time: " +
+                r.getStart() + "\nEnd Time: " + r.getEnd());
         if (intent.resolveActivity(getPackageManager())!=null) {
             startActivity(intent);
         }

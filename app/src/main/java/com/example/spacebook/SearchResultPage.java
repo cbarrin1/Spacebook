@@ -98,9 +98,14 @@ public class SearchResultPage extends FragmentActivity implements AdapterView.On
                 //set three option buttons
                 dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
-                        helper.addRes(new Reservation(roomID, room, email, date, start, end));
+                        Reservation r = new Reservation(roomID, room, email, date, start, end);
+                        helper.addRes(r);
                         //go to email page
                         Intent goToEmails = new Intent(SearchResultPage.this, EmailConfirmation.class);
+
+                        Bundle args = new Bundle();
+                        args.putSerializable("res",r);
+                        goToEmails.putExtra("reservation",args);
                         startActivity(goToEmails);
                         finish();
                     }
