@@ -178,8 +178,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                         }
                     });
 
-
-
+                    dialog.show();
 
           }
       });
