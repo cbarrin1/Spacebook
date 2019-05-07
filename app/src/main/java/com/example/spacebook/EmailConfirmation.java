@@ -49,8 +49,8 @@ public class EmailConfirmation extends AppCompatActivity {
         // opens gmail and parses recipients addresses, subject and text
         Intent intent = new Intent(Intent.ACTION_SENDTO,Uri.parse("mailto:" +fullRecepients));
         intent.putExtra(Intent.EXTRA_SUBJECT, "Study room reservation");
-        intent.putExtra(Intent.EXTRA_TEXT, "You have reserved a room. \nDate: " + r.getDate() + "\nRoom: " + r.getRoomNo() + "\nStart Time: " +
-                r.getStart() + "\nEnd Time: " + r.getEnd());
+        intent.putExtra(Intent.EXTRA_TEXT, "You have reserved a room. \nDate: " + TabPage.formatDate(r.getDate()) + "\nRoom: " + r.getRoomNo() + "\nReserved Time: " +
+                TabPage.convertTime(r.getStart()) + " - " + TabPage.convertTime(r.getEnd()));
         if (intent.resolveActivity(getPackageManager())!=null) {
             startActivity(intent);
         }
