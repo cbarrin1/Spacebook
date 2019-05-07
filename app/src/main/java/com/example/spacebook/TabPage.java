@@ -7,8 +7,10 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -29,7 +31,7 @@ import java.util.Date;
 import java.util.Locale;
 import android.widget.Button;
 
-public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
+public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener, TextToSpeech.OnInitListener {
 
     //DB objects
     private SQLiteDatabase db;
@@ -62,6 +64,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     private ArrayList<String> roomList = new ArrayList<>();
     String searchAgain;
     int deleteID;
+
+    private TextToSpeech speaker;
 
     TabHost tabs;
 
@@ -102,6 +106,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         super.onCreate(savedInstanceState);
         setContentView(R.layout.tab_layout);
 
+        speaker = new TextToSpeech(this, this);
+
         //tab setup
         tabs = findViewById(R.id.tabhost);
         tabs.setup();
@@ -131,33 +137,37 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
             @Override
             public void onClick(View v) {
 
+                if(speaker.isSpeaking()){
+                    speaker.stop();
+                    // else start speech
+                } else {
+                    speak("Are you sure you want to cancel?");
+                }
 
-                System.out.println("pressed");
+                AlertDialog dialog = new AlertDialog.Builder(TabPage.this).create();
+                //set message, title, and icon
+                dialog.setTitle("Room Reservation");
+                dialog.setMessage("Are you sure you want to cancel?");
 
-                    AlertDialog dialog = new AlertDialog.Builder(TabPage.this).create();
-                    //set message, title, and icon
-                    dialog.setTitle("Room Reservation");
-                    dialog.setMessage("Confirm Cancel Reservation");
+                //set three option buttons
+                dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int whichButton) {
+                        helper.deleteRes(deleteID);
+                        myList.clear();
+                        try {
+                            cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{searchAgain});
+                            while (cursor.moveToNext()) {
+                                int id = cursor.getInt(cursor.getColumnIndex("res_id"));
+                                String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
+                                String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
+                                String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
+                                String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
-                    //set three option buttons
-                    dialog.setButton(DialogInterface.BUTTON_POSITIVE, "Confirm", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int whichButton) {
-                            helper.deleteRes(deleteID);
-                            myList.clear();
-                            try {
-                                cursor = db.rawQuery("SELECT * FROM RESERVATIONS WHERE email = ?", new String[]{searchAgain});
-                                while (cursor.moveToNext()) {
-                                    int id = cursor.getInt(cursor.getColumnIndex("res_id"));
-                                    String room = cursor.getString(cursor.getColumnIndex(SQLConstants.ROOM_NO));
-                                    String date = cursor.getString(cursor.getColumnIndex(SQLConstants.DATE));
-                                    String start = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_START));
-                                    String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
-
-                                    idList.add(id);
-                                    myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
-                                    adapter.notifyDataSetChanged();
-                                }
-                            } catch (Exception e) {e.printStackTrace();}
+                                idList.add(id);
+                                myList.add("Date: " + formatDate(date) + "\nRoom: " + room + "\nReserved Time: " + convertTime(start) + " - " + convertTime(end));
+                                adapter.notifyDataSetChanged();
+                            }
+                        } catch (Exception e) {e.printStackTrace();}
                         }
                     });
 
@@ -361,6 +371,25 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         }); // closes OnClickListener
     } // closes OnCreate
 
+    public void speak(String output){
+        //	speaker.speak(output, TextToSpeech.QUEUE_FLUSH, null);  //for APIs before 21
+        speaker.speak(output, TextToSpeech.QUEUE_FLUSH, null, "Id 0");
+    }
+
+    // Implements TextToSpeech.OnInitListener.
+    public void onInit(int status) {
+        // status can be either TextToSpeech.SUCCESS or TextToSpeech.ERROR.
+        if (status == TextToSpeech.SUCCESS) {
+            int result = speaker.setLanguage(Locale.ITALY);
+            if (result == TextToSpeech.LANG_MISSING_DATA ||
+                    result == TextToSpeech.LANG_NOT_SUPPORTED) {
+            } else {
+            }
+        } else {
+            // Initialization failed.
+        }
+    }
+
     public static String convertTime(String s){
         String newTime = s.substring(0, s.indexOf(":"));
         int i = Integer.parseInt(newTime);
@@ -500,18 +529,34 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         super.onStop();
         if(db != null)
             db.close();
+
+        if(speaker != null) {
+            speaker.stop();
+            speaker.shutdown();
+        }
     }
     @Override
     protected void onPause() {
         super.onPause();
         if(db != null)
             db.close();
+
+        if(speaker != null) {
+            speaker.stop();
+            speaker.shutdown();
+        }
+
     }
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if(db != null) {
             db.close();
+
+        }
+        if(speaker != null) {
+            speaker.stop();
+            speaker.shutdown();
         }
     }
 }
