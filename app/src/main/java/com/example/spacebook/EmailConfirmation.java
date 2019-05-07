@@ -56,8 +56,6 @@ public class EmailConfirmation extends AppCompatActivity {
         }
         // finishes when done
         finish();
-
-
     }
 
     // transfers directly to my reservations page
