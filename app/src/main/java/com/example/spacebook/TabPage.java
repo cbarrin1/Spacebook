@@ -28,6 +28,8 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import android.widget.Button;
+import   android.net.Uri;
+
 
 public class TabPage extends AppCompatActivity implements AdapterView.OnItemSelectedListener, AdapterView.OnItemClickListener {
 
@@ -45,6 +47,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
     Button seeAvailable;
     Spinner spin;
     Spinner spin2;
+    Button help;
 
     //setup for dates
     SimpleDateFormat df = new SimpleDateFormat("M/d/yyyy", Locale.US);
@@ -245,6 +248,21 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         });
 
         // button to see results
+
+        help = findViewById(R.id.Call);
+
+
+
+
+        help.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Uri uri1 = Uri.parse("tel:7818912168");
+                Intent i1 = new Intent(Intent.ACTION_DIAL,uri1);
+                startActivity(i1);
+
+            }
+        });
         seeAvailable = findViewById(R.id.button5);
         seeAvailable.setOnClickListener(new View.OnClickListener() {
             @Override
