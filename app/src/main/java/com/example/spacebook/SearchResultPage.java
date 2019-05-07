@@ -124,7 +124,7 @@ public class SearchResultPage extends FragmentActivity implements AdapterView.On
         //set parameter values for Notification
         mBuilder = new NotificationCompat.Builder(this, "default")
                 .setContentIntent(pendingIntent)
-                .setSmallIcon(R.drawable.droid)
+                .setSmallIcon(R.drawable.bentley_logo_round)
                 .setContentTitle(textTitle)
                 .setContentText(textContent)
                 .setAutoCancel(true)     //cancel Notification after clicking on it
