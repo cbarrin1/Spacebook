@@ -183,7 +183,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
                 idList.add(id);
-                myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
+                myList.add("Date: " + formatDate(date) + "\nRoom: " + room + "\nReserved Time: " + convertTime(start) + " - " + convertTime(end));
                 adapter.notifyDataSetChanged();
             }
         } catch (Exception e) {e.printStackTrace();}
@@ -361,6 +361,33 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         }); // closes OnClickListener
     } // closes OnCreate
 
+    public static String convertTime(String s){
+        String newTime = s.substring(0, s.indexOf(":"));
+        int i = Integer.parseInt(newTime);
+
+        if (i == 12) {
+            newTime = i + s.substring(s.indexOf(":")) + "PM";
+        }
+        else if (i > 12) {
+            i -= 12;
+            newTime = i + s.substring(s.indexOf(":")) + "PM";
+        }
+        else {
+            newTime = i + s.substring(s.indexOf(":")) + "AM";
+        }
+        return newTime;
+    }
+
+    public static String formatDate(String s){
+        int m, d, y;
+
+        y = Integer.parseInt(s.substring(0, s.indexOf("-")));
+        m = Integer.parseInt(s.substring(s.indexOf("-") + 1, s.indexOf("-", s.indexOf("-") + 1)));
+        d = Integer.parseInt(s.substring(Math.max(s.length() - 2, 0)));
+
+        return m + "/" + d + "/" + y;
+    }
+
     public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
         v.setSelected(true);
         deleteID = idList.get(position);
@@ -441,7 +468,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
                 idList.add(id);
-                myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
+                myList.add("Date: " + formatDate(date) + "\nRoom: " + room + "\nReserved Time: " + convertTime(start) + " - " + convertTime(end));
                 adapter.notifyDataSetChanged();
             }
         } catch (Exception e) {e.printStackTrace();}
@@ -463,7 +490,7 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
                 String end = cursor.getString(cursor.getColumnIndex(SQLConstants.TIME_END));
 
                 idList.add(id);
-                myList.add("Date: " + date + " Start Time: " + start + " End Time: " + end + " Room: " + room);
+                myList.add("Date: " + formatDate(date) + "\nRoom: " + room + "\nReserved Time: " + convertTime(start) + " - " + convertTime(end));
                 adapter.notifyDataSetChanged();
             }
         } catch (Exception e) {e.printStackTrace();}
