@@ -130,6 +130,8 @@ public class TabPage extends AppCompatActivity implements AdapterView.OnItemSele
         delete.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
+
                 System.out.println("pressed");
 
                     AlertDialog dialog = new AlertDialog.Builder(TabPage.this).create();
